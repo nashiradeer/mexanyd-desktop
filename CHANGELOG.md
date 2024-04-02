@@ -1,0 +1,3 @@
+# Mexanyd Desktop // Changelog
+
+## [Unreleased]
