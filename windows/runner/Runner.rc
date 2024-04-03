@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "mexanyd_desktop" "\0"
+            VALUE "CompanyName", "Nashira Deer" "\0"
+            VALUE "FileDescription", "Mekanyd Desktop" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "mexanyd_desktop" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
+            VALUE "InternalName", "Mexanyd Desktop" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 Nashira Deer. All rights reserved." "\0"
             VALUE "OriginalFilename", "mexanyd_desktop.exe" "\0"
-            VALUE "ProductName", "mexanyd_desktop" "\0"
+            VALUE "ProductName", "Mexanyd Desktop" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
