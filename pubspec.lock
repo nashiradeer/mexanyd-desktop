@@ -209,7 +209,7 @@ packages:
     source: hosted
     version: "1.11.0"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       sha256: "087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af"
@@ -406,7 +406,7 @@ packages:
     source: hosted
     version: "0.5.1"
   window_manager:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: window_manager
       sha256: b3c895bdf936c77b83c5254bec2e6b3f066710c1f89c38b20b8acc382b525494
