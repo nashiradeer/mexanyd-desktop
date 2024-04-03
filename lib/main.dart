@@ -1,6 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:mexanyd_desktop/in_out_input.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  WindowOptions options = const WindowOptions(
+    title: 'Mexanyd Desktop',
+    minimumSize: Size(400, 600),
+  );
+
+  windowManager.waitUntilReadyToShow(options, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
+
   runApp(const MainApp());
 }
 
@@ -9,12 +24,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      home: const InOutInput(),
+      darkTheme: ThemeData.dark(),
+      theme: ThemeData.light(),
     );
   }
 }
