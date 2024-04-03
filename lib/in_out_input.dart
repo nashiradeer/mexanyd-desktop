@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-class InOutInput extends StatelessWidget {
+class InOutInput extends StatefulWidget {
   const InOutInput({super.key});
 
+  @override
+  State<InOutInput> createState() => _InOutInputState();
+}
+
+class _InOutInputState extends State<InOutInput> {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -12,8 +17,10 @@ class InOutInput extends StatelessWidget {
         margin: const EdgeInsets.only(top: 30, left: 15, right: 15),
         child: Column(
           children: [
+            // Title
             const Text("Entrada/Saída",
                 style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold)),
+            // TextFields
             Container(
               margin: const EdgeInsets.only(top: 20),
               child: Row(
@@ -56,9 +63,10 @@ class InOutInput extends StatelessWidget {
                 ],
               ),
             ),
+            // Buttons
             Container(
               margin: const EdgeInsets.only(top: 20),
-              constraints: const BoxConstraints(maxWidth: 720),
+              constraints: const BoxConstraints(maxWidth: 715),
               child: Row(
                 children: [
                   Expanded(
