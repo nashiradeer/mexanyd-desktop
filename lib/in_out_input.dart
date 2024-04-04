@@ -1,5 +1,8 @@
+import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 
 class InOutInput extends StatefulWidget {
@@ -16,6 +19,8 @@ class _InOutInputState extends State<InOutInput> {
 
   @override
   Widget build(BuildContext context) {
+    var today = DateTime.timestamp();
+
     return Material(
       child: Container(
         margin: const EdgeInsets.only(top: 30, left: 15, right: 15),
@@ -146,6 +151,124 @@ class _InOutInputState extends State<InOutInput> {
                 ],
               ),
             ),
+            // Today list
+            FutureBuilder(
+                future: globalDatabase.listInOutByCreation(today.year,
+                    month: today.month, day: today.day, limit: 100000),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 20, bottom: 50),
+                        constraints: const BoxConstraints(maxWidth: 715),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey[800]
+                              : Colors.grey[300],
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        padding: const EdgeInsets.only(top: 10, bottom: 10),
+                        child: CustomScrollView(
+                          shrinkWrap: true,
+                          slivers: [
+                            SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  final item = snapshot.data?[index];
+                                  return Container(
+                                    margin: const EdgeInsets.only(
+                                        bottom: 10, left: 20, right: 20),
+                                    decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10)),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background),
+                                    child: ListTile(
+                                      title: item!.description.isEmpty
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: 100,
+                                                  child: Text(
+                                                    item.value
+                                                        .toStringAsFixed(2),
+                                                    textAlign: TextAlign.end,
+                                                    style: TextStyle(
+                                                      color: item.value > 0
+                                                          ? Colors.green
+                                                          : Colors.red,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: 100,
+                                                  child: Text(
+                                                    item.value
+                                                        .toStringAsFixed(2),
+                                                    textAlign: TextAlign.end,
+                                                    style: TextStyle(
+                                                      color: item.value > 0
+                                                          ? Colors.green
+                                                          : Colors.red,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 20),
+                                                Text(
+                                                  item.description,
+                                                ),
+                                              ],
+                                            ),
+                                      trailing: IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () {
+                                          globalDatabase
+                                              .deleteInOut(item.id)
+                                              .then((value) => setState(() {}));
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                                childCount: snapshot.data?.length,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  } else {
+                    return const Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                            strokeWidth: 10,
+                            strokeAlign: 1,
+                            strokeCap: StrokeCap.round,
+                            color: Colors.deepPurpleAccent),
+                      ),
+                    );
+                  }
+                }),
           ],
         ),
       ),
