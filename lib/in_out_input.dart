@@ -3,8 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 
 class InOutInput extends StatefulWidget {
-  final IDatabase database;
-  const InOutInput(this.database, {super.key});
+  const InOutInput({super.key});
 
   @override
   State<InOutInput> createState() => _InOutInputState();
@@ -92,8 +91,8 @@ class _InOutInputState extends State<InOutInput> {
                               double.parse(_valueController.text);
                           final String description =
                               _descriptionController.text;
-                          widget.database
-                              .insertInOut(value, description: description);
+                          globalDatabase.insertInOut(value,
+                              description: description);
                           _valueController.clear();
                           _descriptionController.clear();
                           setState(() {
@@ -125,8 +124,8 @@ class _InOutInputState extends State<InOutInput> {
                                 double.parse(_valueController.text);
                             final String description =
                                 _descriptionController.text;
-                            widget.database
-                                .insertInOut(-value, description: description);
+                            globalDatabase.insertInOut(-value,
+                                description: description);
                             _valueController.clear();
                             _descriptionController.clear();
                             setState(() {

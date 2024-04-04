@@ -1,3 +1,5 @@
+late IDatabase globalDatabase;
+
 abstract class IDatabase {
   /// Inserts a new in/out with the given [value] and [description].
   Future<void> insertInOut(double value, {String description = ''});

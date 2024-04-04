@@ -8,7 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
 
-  var database = await LocalDatabase.open();
+  globalDatabase = await LocalDatabase.open();
 
   var options = const WindowOptions(
     title: 'Mexanyd Desktop',
@@ -20,20 +20,16 @@ void main() async {
     await windowManager.focus();
   });
 
-  runApp(MainApp(
-    database,
-  ));
+  runApp(const MainApp());
 }
 
 class MainApp extends StatelessWidget {
-  final IDatabase database;
-
-  const MainApp(this.database, {super.key});
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: InOutInput(database),
+      home: const InOutInput(),
       darkTheme: ThemeData.dark(),
       theme: ThemeData.light(),
     );
