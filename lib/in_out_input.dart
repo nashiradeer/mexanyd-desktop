@@ -19,7 +19,7 @@ class _InOutInputState extends State<InOutInput> {
 
   @override
   Widget build(BuildContext context) {
-    var today = DateTime.timestamp();
+    var today = DateTime.now();
 
     return Material(
       child: Container(

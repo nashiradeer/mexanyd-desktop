@@ -36,7 +36,7 @@ class InOut {
   final String description;
 
   InOut(this.id, this.value, {DateTime? creation, this.description = ''})
-      : creation = creation ?? DateTime.timestamp();
+      : creation = creation ?? DateTime.now();
 
   /// Creates an [InOut] from a map.
   factory InOut.fromMap(Map<String, Object?> map) {

@@ -58,7 +58,7 @@ class LocalDatabase extends IDatabase {
   @override
   Future<void> insertInOut(double value, {String description = ''}) async {
     await _database.insert("in_out", {
-      "creation": DateTime.timestamp().toDateString(),
+      "creation": DateTime.now().toDateString(),
       "value": value,
       "description": description,
     });
