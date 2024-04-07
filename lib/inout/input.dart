@@ -12,6 +12,7 @@ class InOutInputPage extends StatefulWidget {
 class _InOutInputState extends State<InOutInputPage> {
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _error = false;
 
   @override
@@ -19,21 +20,30 @@ class _InOutInputState extends State<InOutInputPage> {
     var today = DateTime.now();
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text(
           "Entrada/Saída",
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.menu_rounded),
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.view_list_rounded),
+            icon: const Icon(Icons.list_alt_rounded),
             onPressed: () {
               Navigator.pushNamed(context, '/inout/list');
             },
-          )
+          ),
+          const SizedBox(width: 10),
         ],
       ),
+      drawer: const Material(),
       body: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 1500),
@@ -47,7 +57,7 @@ class _InOutInputState extends State<InOutInputPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 90,
+                    width: 100,
                     child: TextField(
                       controller: _valueController,
                       inputFormatters: [
@@ -55,7 +65,7 @@ class _InOutInputState extends State<InOutInputPage> {
                         FilteringTextInputFormatter.deny(RegExp(r','),
                             replacementString: '.'),
                       ],
-                      maxLength: 7,
+                      maxLength: 8,
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       decoration: InputDecoration(
@@ -72,8 +82,11 @@ class _InOutInputState extends State<InOutInputPage> {
                   Expanded(
                     child: TextField(
                       controller: _descriptionController,
+                      maxLength: 30,
+                      maxLines: 1,
                       decoration: InputDecoration(
                         labelText: "Descrição",
+                        counterText: "",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -94,7 +107,7 @@ class _InOutInputState extends State<InOutInputPage> {
                         minimumSize:
                             MaterialStateProperty.all(const Size(0, 60)),
                       ),
-                      onPressed: _save,
+                      onPressed: () => _save(invert: false),
                       child: const Text("Entrada",
                           style: TextStyle(color: Colors.white, fontSize: 20)),
                     ),
@@ -107,7 +120,7 @@ class _InOutInputState extends State<InOutInputPage> {
                         minimumSize:
                             MaterialStateProperty.all(const Size(0, 60)),
                       ),
-                      onPressed: _save,
+                      onPressed: () => _save(invert: true),
                       child: const Text("Saída",
                           style: TextStyle(color: Colors.white, fontSize: 20)),
                     ),
@@ -163,13 +176,28 @@ class _InOutInputState extends State<InOutInputPage> {
     );
   }
 
-  void _save() {
+  void _save({bool invert = false}) {
     try {
-      final double value = double.parse(_valueController.text);
+      var value = double.parse(_valueController.text);
+
+      if (invert) {
+        value = -value;
+      }
+
+      if (value > 99999.99) {
+        setState(() {
+          _error = true;
+        });
+        return;
+      }
+
       final String description = _descriptionController.text;
-      globalDatabase.insertInOut(-value, description: description);
+
+      globalDatabase.insertInOut(value, description: description);
+
       _valueController.clear();
       _descriptionController.clear();
+
       setState(() {
         _error = false;
       });
