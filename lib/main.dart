@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/database/local.dart';
 import 'package:mexanyd_desktop/inout/input.dart';
+import 'package:mexanyd_desktop/inout/list.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -12,7 +13,7 @@ void main() async {
 
   var options = const WindowOptions(
     title: 'Mexanyd Desktop',
-    minimumSize: Size(400, 600),
+    minimumSize: Size(600, 800),
   );
 
   windowManager.waitUntilReadyToShow(options, () async {
@@ -32,7 +33,7 @@ class MainApp extends StatelessWidget {
       initialRoute: '/inout',
       routes: {
         '/inout': (context) => const InOutInputPage(),
-        '/inout/list': (context) => const Material(),
+        '/inout/list': (context) => const InOutListPage(),
       },
       darkTheme: ThemeData.dark(useMaterial3: true),
       theme: ThemeData.light(useMaterial3: true),
