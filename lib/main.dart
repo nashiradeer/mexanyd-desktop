@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/database/local.dart';
-import 'package:mexanyd_desktop/in_out_input.dart';
+import 'package:mexanyd_desktop/inout/input.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -29,9 +29,13 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const InOutInput(),
-      darkTheme: ThemeData.dark(),
-      theme: ThemeData.light(),
+      initialRoute: '/inout',
+      routes: {
+        '/inout': (context) => const InOutInputPage(),
+        '/inout/list': (context) => const Material(),
+      },
+      darkTheme: ThemeData.dark(useMaterial3: true),
+      theme: ThemeData.light(useMaterial3: true),
     );
   }
 }
