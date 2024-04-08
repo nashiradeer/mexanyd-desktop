@@ -15,6 +15,7 @@ void main() async {
     title: 'Mexanyd Desktop',
     minimumSize: Size(600, 800),
     size: Size(600, 800),
+    center: true,
   );
 
   windowManager.waitUntilReadyToShow(options, () async {
