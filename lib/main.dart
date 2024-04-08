@@ -13,8 +13,8 @@ void main() async {
 
   var options = const WindowOptions(
     title: 'Mexanyd Desktop',
-    minimumSize: Size(600, 800),
-    size: Size(600, 800),
+    minimumSize: Size(800, 600),
+    size: Size(800, 600),
     center: true,
   );
 
@@ -32,13 +32,24 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/inout',
-      routes: {
-        '/inout': (context) => const InOutInputPage(),
-        '/inout/list': (context) => const InOutListPage(),
-      },
       darkTheme: ThemeData.dark(useMaterial3: true),
       theme: ThemeData.light(useMaterial3: true),
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/inout/list':
+            return _pageRoute(const InOutListPage());
+          default:
+            return _pageRoute(const InOutInputPage());
+        }
+      },
+    );
+  }
+
+  PageRouteBuilder _pageRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation1, animation2) => page,
+      transitionDuration: Duration.zero,
+      reverseTransitionDuration: Duration.zero,
     );
   }
 }
