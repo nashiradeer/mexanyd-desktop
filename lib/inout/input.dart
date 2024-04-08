@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/theme.dart';
+import 'package:mexanyd_desktop/widgets/page.dart';
 
 class InOutInputPage extends StatefulWidget {
   const InOutInputPage({super.key});
@@ -13,57 +14,36 @@ class InOutInputPage extends StatefulWidget {
 class _InOutInputState extends State<InOutInputPage> {
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _error = false;
 
   @override
   Widget build(BuildContext context) {
     var today = DateTime.now();
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: const Text(
-          "Entrada/Saída",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.menu_rounded),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.list_alt_rounded),
-            onPressed: () {
-              Navigator.pushNamed(context, '/inout/list');
-            },
+    return MexanydPage(
+      actions: [
+        const MexanydPageButton(
+          label: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Entrada", style: TextStyle(fontSize: 10)),
+              Text("Saída", style: TextStyle(fontSize: 10)),
+            ],
           ),
-          const SizedBox(width: 10),
-        ],
-      ),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                onPressed: () {
-                  _scaffoldKey.currentState?.openEndDrawer();
-                },
-                icon: const Icon(Icons.close_rounded),
-              ),
-            ),
-            Expanded(
-              child: ListView(),
-            ),
-            const Text("Mexanyd Desktop v0.0.1-alpha.1"),
-          ],
+          icon: Icon(Icons.swap_vert_rounded, size: 20),
+          onPressed: null,
         ),
-      ),
-      body: Center(
+        const SizedBox(height: 5),
+        MexanydPageButton(
+          label: const Text("Listar", style: TextStyle(fontSize: 12)),
+          icon: const Icon(
+            Icons.list,
+            size: 32,
+          ),
+          onPressed: () => Navigator.popAndPushNamed(context, '/inout/list'),
+        ),
+      ],
+      child: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 1000),
           padding:

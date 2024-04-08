@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/theme.dart';
+import 'package:mexanyd_desktop/widgets/page.dart';
 
 class InOutListPage extends StatefulWidget {
   const InOutListPage({super.key});
@@ -23,21 +24,30 @@ class _InOutListState extends State<InOutListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Entrada/Saída",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+    return MexanydPage(
+      actions: [
+        MexanydPageButton(
+          label: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Entrada", style: TextStyle(fontSize: 10)),
+              Text("Saída", style: TextStyle(fontSize: 10)),
+            ],
+          ),
+          icon: const Icon(Icons.swap_vert_rounded, size: 20),
+          onPressed: () => Navigator.popAndPushNamed(context, "/inout"),
         ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        const SizedBox(height: 5),
+        const MexanydPageButton(
+          label: Text("Listar", style: TextStyle(fontSize: 12)),
+          icon: Icon(
+            Icons.list,
+            size: 32,
+          ),
+          onPressed: null,
         ),
-      ),
-      body: Center(
+      ],
+      child: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 1000),
           padding:
