@@ -14,6 +14,7 @@ void main() async {
   var options = const WindowOptions(
     title: 'Mexanyd Desktop',
     minimumSize: Size(600, 800),
+    size: Size(600, 800),
   );
 
   windowManager.waitUntilReadyToShow(options, () async {
