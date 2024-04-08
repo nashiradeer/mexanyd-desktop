@@ -273,36 +273,47 @@ class _InOutListState extends State<InOutListPage> {
 
   Widget _parse(AsyncSnapshot snapshot) {
     return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-          color: listBackground(context),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
-        padding: const EdgeInsets.only(top: 5, bottom: 5),
-        child: CustomScrollView(
-          shrinkWrap: true,
-          slivers: [
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final item = snapshot.data?[index];
-                  return Container(
-                    margin:
-                        const EdgeInsets.only(bottom: 5, left: 5, right: 15),
-                    decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        color: Theme.of(context).colorScheme.background),
-                    child: ListTile(
-                      title: _generate(item),
+      child: Column(
+        children: [
+          Text(
+            "Total: ${snapshot.data.fold(0, (previousValue, element) => previousValue + element.value).toStringAsFixed(2)}",
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: listBackground(context),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+              ),
+              padding: const EdgeInsets.only(top: 5, bottom: 5),
+              child: CustomScrollView(
+                shrinkWrap: true,
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final item = snapshot.data?[index];
+                        return Container(
+                          margin: const EdgeInsets.only(
+                              bottom: 5, left: 5, right: 15),
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              color: Theme.of(context).colorScheme.background),
+                          child: ListTile(
+                            title: _generate(item),
+                          ),
+                        );
+                      },
+                      childCount: snapshot.data?.length,
                     ),
-                  );
-                },
-                childCount: snapshot.data?.length,
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
