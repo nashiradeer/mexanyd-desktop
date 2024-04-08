@@ -44,7 +44,25 @@ class _InOutInputState extends State<InOutInputPage> {
           const SizedBox(width: 10),
         ],
       ),
-      drawer: const Material(),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                onPressed: () {
+                  _scaffoldKey.currentState?.openEndDrawer();
+                },
+                icon: const Icon(Icons.close_rounded),
+              ),
+            ),
+            Expanded(
+              child: ListView(),
+            ),
+            const Text("Mexanyd Desktop v0.0.1-alpha.1"),
+          ],
+        ),
+      ),
       body: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 1000),
