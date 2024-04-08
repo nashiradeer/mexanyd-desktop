@@ -58,6 +58,8 @@ class _InOutListState extends State<InOutListPage> {
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       ],
                       textAlign: TextAlign.center,
+                      keyboardType: const TextInputType.numberWithOptions(),
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: "Ano",
                         counterText: "",
@@ -79,6 +81,8 @@ class _InOutListState extends State<InOutListPage> {
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       ],
                       textAlign: TextAlign.center,
+                      keyboardType: const TextInputType.numberWithOptions(),
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: "Mês",
                         counterText: "",
@@ -100,6 +104,8 @@ class _InOutListState extends State<InOutListPage> {
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                       ],
                       textAlign: TextAlign.center,
+                      keyboardType: const TextInputType.numberWithOptions(),
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: "Dia",
                         counterText: "",

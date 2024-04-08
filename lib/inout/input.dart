@@ -69,6 +69,11 @@ class _InOutInputState extends State<InOutInputPage> {
                       maxLength: 8,
                       textAlign: TextAlign.center,
                       maxLines: 1,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                        signed: true,
+                      ),
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: "Valor",
                         counterText: "",
@@ -85,6 +90,8 @@ class _InOutInputState extends State<InOutInputPage> {
                       controller: _descriptionController,
                       maxLength: 30,
                       maxLines: 1,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
                         labelText: "Descrição",
                         counterText: "",
