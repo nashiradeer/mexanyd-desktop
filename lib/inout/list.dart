@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
+import 'package:mexanyd_desktop/theme.dart';
 
 class InOutListPage extends StatefulWidget {
   const InOutListPage({super.key});
@@ -274,9 +275,7 @@ class _InOutListState extends State<InOutListPage> {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.grey[850]
-              : Colors.grey[300],
+          color: listBackground(context),
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
         padding: const EdgeInsets.only(top: 5, bottom: 5),
