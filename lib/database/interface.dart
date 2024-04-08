@@ -12,7 +12,11 @@ abstract class IDatabase {
 
   /// Lists the in/outs created in the given creation date.
   Future<List<InOut>> listInOutByCreation(int year,
-      {int? month, int? day, int limit = 10, int offset = 0});
+      {int? month,
+      int? day,
+      int limit = 10,
+      int offset = 0,
+      bool reversed = false});
 }
 
 extension Date on DateTime {

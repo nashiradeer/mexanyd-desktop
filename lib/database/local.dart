@@ -66,7 +66,11 @@ class LocalDatabase extends IDatabase {
 
   @override
   Future<List<InOut>> listInOutByCreation(int year,
-      {int? month, int? day, int limit = 10, int offset = 0}) async {
+      {int? month,
+      int? day,
+      int limit = 10,
+      int offset = 0,
+      bool reversed = false}) async {
     var yearStr = year.toString().padLeft(4, '0');
     var whereArg = "$yearStr%";
 
@@ -87,6 +91,7 @@ class LocalDatabase extends IDatabase {
             limit: limit,
             offset: offset,
             where: "creation LIKE ?",
+            orderBy: "id ${reversed ? 'DESC' : 'ASC'}",
             whereArgs: [whereArg])
         .then((value) => value.map((e) => InOut.fromMap(e)).toList());
   }

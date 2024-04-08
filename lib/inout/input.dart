@@ -47,7 +47,7 @@ class _InOutInputState extends State<InOutInputPage> {
       drawer: const Material(),
       body: Center(
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 1500),
+          constraints: const BoxConstraints(maxWidth: 1000),
           padding:
               const EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 10),
           child: Column(
@@ -132,7 +132,10 @@ class _InOutInputState extends State<InOutInputPage> {
               // Today list
               FutureBuilder(
                 future: globalDatabase.listInOutByCreation(today.year,
-                    month: today.month, day: today.day, limit: 100000),
+                    month: today.month,
+                    day: today.day,
+                    limit: 100000,
+                    reversed: true),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return _parse(snapshot);
@@ -178,35 +181,30 @@ class _InOutInputState extends State<InOutInputPage> {
   }
 
   void _save({bool invert = false}) {
-    try {
-      var value = double.parse(_valueController.text);
+    var value = double.tryParse(_valueController.text);
 
-      if (invert) {
-        value = -value;
-      }
-
-      if (value > 99999.99) {
-        setState(() {
-          _error = true;
-        });
-        return;
-      }
-
-      final String description = _descriptionController.text;
-
-      globalDatabase.insertInOut(value, description: description);
-
-      _valueController.clear();
-      _descriptionController.clear();
-
-      setState(() {
-        _error = false;
-      });
-    } catch (e) {
+    if (value == null || value > 99999.99) {
       setState(() {
         _error = true;
       });
+
+      return;
     }
+
+    if (invert) {
+      value = -value;
+    }
+
+    final String description = _descriptionController.text;
+
+    globalDatabase.insertInOut(value, description: description);
+
+    _valueController.clear();
+    _descriptionController.clear();
+
+    setState(() {
+      _error = false;
+    });
   }
 
   Widget _parse(AsyncSnapshot snapshot) {

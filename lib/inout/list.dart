@@ -39,7 +39,7 @@ class _InOutListState extends State<InOutListPage> {
       ),
       body: Center(
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 1500),
+          constraints: const BoxConstraints(maxWidth: 1000),
           padding:
               const EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 10),
           child: Column(
