@@ -1,24 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
 
 class MexanydPage extends StatelessWidget {
-  final String? title;
+  final Widget? title;
+  final Widget? icon;
   final Widget child;
   final List<Widget>? actions;
 
-  const MexanydPage({super.key, this.title, required this.child, this.actions});
+  const MexanydPage(
+      {super.key, required this.child, this.title, this.icon, this.actions});
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Row(
+      child: Column(
         children: [
-          if (actions != null)
-            Container(
-              padding: const EdgeInsets.all(5),
-              child: Column(children: actions!),
+          _buildHeader(context),
+          Expanded(
+            child: Row(
+              children: [
+                if (actions != null) _buildActions(context),
+                Expanded(
+                  child: child,
+                ),
+              ],
             ),
-          Expanded(child: child),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTapDown: (event) {
+              windowManager.startDragging();
+            },
+            child: SizedBox(
+              width: double.infinity,
+              height: 40,
+              child: Row(
+                children: [
+                  if (icon != null) icon!,
+                  if (icon != null) const SizedBox(width: 5),
+                  if (title != null) title!,
+                ],
+              ),
+            ),
+          ),
+        ),
+        _buildWindowButtons(context),
+      ],
+    );
+  }
+
+  Widget _buildWindowButtons(BuildContext context) {
+    return Row(
+      children: [
+        WindowButton(
+          onPressed: () => WindowManager.instance.minimize(),
+          icon: const Icon(Icons.minimize),
+        ),
+        const MaximizeButton(),
+        WindowButton(
+          onPressed: () => WindowManager.instance.close(),
+          icon: const Icon(Icons.close),
+          hoverColor: Colors.redAccent,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActions(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: Column(
+        children: actions!,
       ),
     );
   }
@@ -28,38 +89,30 @@ class MexanydPageButton extends StatelessWidget {
   final Widget label;
   final Widget icon;
   final void Function()? onPressed;
-  final double height;
-  final double width;
-  final ButtonStyle? style;
 
   const MexanydPageButton({
     super.key,
     required this.label,
     required this.onPressed,
     required this.icon,
-    this.style,
-    this.height = 65,
-    this.width = 65,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width,
-      height: height,
-      child: Expanded(
-        child: TextButton(
-          onPressed: onPressed,
-          style: style ?? _generateStyle(context),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              icon,
-              label,
-            ],
-          ),
+      width: 65,
+      height: 65,
+      child: TextButton(
+        onPressed: onPressed,
+        style: _generateStyle(context),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            icon,
+            label,
+          ],
         ),
       ),
     );
@@ -77,8 +130,84 @@ class MexanydPageButton extends StatelessWidget {
 }
 
 class WindowButton extends StatelessWidget {
+  final void Function()? onPressed;
+  final Widget icon;
+  final Color? hoverColor;
+
+  const WindowButton({
+    super.key,
+    required this.onPressed,
+    required this.icon,
+    this.hoverColor,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return const Material();
+    return IconButton(
+      onPressed: onPressed,
+      icon: icon,
+      iconSize: 20,
+      hoverColor: hoverColor,
+    );
+  }
+}
+
+class MaximizeButton extends StatefulWidget {
+  final Color? hoverColor;
+
+  const MaximizeButton({super.key, this.hoverColor});
+
+  @override
+  State<MaximizeButton> createState() => _MaximizeButtonState();
+}
+
+class _MaximizeButtonState extends State<MaximizeButton> with WindowListener {
+  @override
+  Widget build(BuildContext context) {
+    return WindowButton(
+      icon: FutureBuilder(
+        future: windowManager.isMaximized(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Icon(snapshot.data as bool
+                ? Icons.close_fullscreen_rounded
+                : Icons.open_in_full_rounded);
+          } else {
+            return const Icon(Icons.open_in_full_rounded);
+          }
+        },
+      ),
+      onPressed: () {
+        windowManager.isMaximized().then((value) {
+          if (value) {
+            windowManager.unmaximize();
+          } else {
+            windowManager.maximize();
+          }
+        });
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    windowManager.addListener(this);
+  }
+
+  @override
+  void dispose() {
+    windowManager.removeListener(this);
+    super.dispose();
+  }
+
+  @override
+  void onWindowMaximize() {
+    setState(() {});
+  }
+
+  @override
+  void onWindowUnmaximize() {
+    setState(() {});
   }
 }
