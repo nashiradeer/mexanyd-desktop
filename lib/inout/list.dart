@@ -113,6 +113,7 @@ class _InOutListState extends State<InOutListPage> {
                       decoration: InputDecoration(
                         labelText: "Dia",
                         counterText: "",
+                        errorText: _dayError ? "Inválido" : null,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
