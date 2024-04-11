@@ -25,6 +25,8 @@ class _InOutListState extends State<InOutListPage> {
   @override
   Widget build(BuildContext context) {
     return MexanydPage(
+      title: "Listar",
+      icon: Icons.list_alt_rounded,
       actions: [
         MexanydPageButton(
           text1: "Entrada",

@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 
 class MexanydPage extends StatelessWidget {
-  final Widget? title;
-  final Widget? icon;
+  final String? title;
+  final IconData? icon;
   final Widget child;
   final List<Widget>? actions;
 
@@ -45,9 +47,20 @@ class MexanydPage extends StatelessWidget {
               height: 40,
               child: Row(
                 children: [
-                  if (icon != null) icon!,
-                  if (icon != null) const SizedBox(width: 5),
-                  if (title != null) title!,
+                  if (icon != null) _buildIcon(context),
+                  if (title != null) const Spacer(),
+                  if (title != null)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 150),
+                      child: Text(
+                        title!,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  const Spacer(),
                 ],
               ),
             ),
@@ -55,6 +68,15 @@ class MexanydPage extends StatelessWidget {
         ),
         _buildWindowButtons(context),
       ],
+    );
+  }
+
+  Widget _buildIcon(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 40,
+      padding: const EdgeInsets.only(left: 5, right: 5),
+      child: Icon(icon, size: 25, color: Theme.of(context).colorScheme.primary),
     );
   }
 

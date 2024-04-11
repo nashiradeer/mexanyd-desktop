@@ -21,6 +21,8 @@ class _InOutInputState extends State<InOutInputPage> {
     var today = DateTime.now();
 
     return MexanydPage(
+      title: "Entrada/Saída",
+      icon: Icons.swap_vert_rounded,
       actions: [
         const MexanydPageButton(
           text1: "Entrada",
