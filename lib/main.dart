@@ -3,6 +3,7 @@ import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/database/local.dart';
 import 'package:mexanyd_desktop/inout/input.dart';
 import 'package:mexanyd_desktop/inout/list.dart';
+import 'package:mexanyd_desktop/theme.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -33,8 +34,8 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      darkTheme: ThemeData.dark(useMaterial3: true),
-      theme: ThemeData.light(useMaterial3: true),
+      darkTheme: darkTheme(),
+      theme: lightTheme(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/inout/list':
