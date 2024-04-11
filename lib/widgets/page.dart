@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 
 class MexanydPage extends StatelessWidget {
@@ -70,7 +69,7 @@ class MexanydPage extends StatelessWidget {
         WindowButton(
           onPressed: () => WindowManager.instance.close(),
           icon: const Icon(Icons.close),
-          hoverColor: Colors.red,
+          danger: true,
         ),
       ],
     );
@@ -157,23 +156,27 @@ class MexanydPageButton extends StatelessWidget {
 class WindowButton extends StatelessWidget {
   final void Function()? onPressed;
   final Widget icon;
-  final Color? hoverColor;
+  final bool danger;
 
   const WindowButton({
     super.key,
     required this.onPressed,
     required this.icon,
-    this.hoverColor,
+    this.danger = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: onPressed,
-      icon: icon,
-      iconSize: 20,
-      hoverColor: hoverColor,
-    );
+        onPressed: onPressed,
+        icon: icon,
+        iconSize: 20,
+        hoverColor: danger ? Colors.red : null,
+        style: ButtonStyle(
+          iconColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.onBackground),
+          shape: MaterialStateProperty.all(const ContinuousRectangleBorder()),
+        ));
   }
 }
 
