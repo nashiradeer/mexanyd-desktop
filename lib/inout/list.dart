@@ -27,23 +27,15 @@ class _InOutListState extends State<InOutListPage> {
     return MexanydPage(
       actions: [
         MexanydPageButton(
-          label: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Entrada", style: TextStyle(fontSize: 10)),
-              Text("Saída", style: TextStyle(fontSize: 10)),
-            ],
-          ),
-          icon: const Icon(Icons.swap_vert_rounded, size: 20),
+          text1: "Entrada",
+          text2: "Saída",
+          icon: Icons.swap_vert_rounded,
           onPressed: () => Navigator.popAndPushNamed(context, "/inout"),
         ),
         const SizedBox(height: 5),
         const MexanydPageButton(
-          label: Text("Listar", style: TextStyle(fontSize: 12)),
-          icon: Icon(
-            Icons.list,
-            size: 32,
-          ),
+          text1: "Listar",
+          icon: Icons.list_alt_rounded,
           onPressed: null,
         ),
       ],
@@ -119,7 +111,6 @@ class _InOutListState extends State<InOutListPage> {
                       decoration: InputDecoration(
                         labelText: "Dia",
                         counterText: "",
-                        errorText: _dayError ? "Inválido" : null,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),

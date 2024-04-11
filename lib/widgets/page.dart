@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:window_manager/window_manager.dart';
 
 class MexanydPage extends StatelessWidget {
@@ -69,7 +70,7 @@ class MexanydPage extends StatelessWidget {
         WindowButton(
           onPressed: () => WindowManager.instance.close(),
           icon: const Icon(Icons.close),
-          hoverColor: Colors.redAccent,
+          hoverColor: Colors.red,
         ),
       ],
     );
@@ -86,15 +87,17 @@ class MexanydPage extends StatelessWidget {
 }
 
 class MexanydPageButton extends StatelessWidget {
-  final Widget label;
-  final Widget icon;
+  final String text1;
+  final String? text2;
+  final IconData icon;
   final void Function()? onPressed;
 
   const MexanydPageButton({
     super.key,
-    required this.label,
+    required this.text1,
     required this.onPressed,
     required this.icon,
+    this.text2,
   });
 
   @override
@@ -110,12 +113,34 @@ class MexanydPageButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            icon,
-            label,
+            _buildIcon(context),
+            _buildText(context),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildText(BuildContext context) {
+    if (text2 == null) {
+      return Text(text1, style: const TextStyle(fontSize: 12));
+    } else {
+      return const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Entrada", style: TextStyle(fontSize: 10)),
+          Text("Saída", style: TextStyle(fontSize: 10)),
+        ],
+      );
+    }
+  }
+
+  Widget _buildIcon(BuildContext context) {
+    if (text2 == null) {
+      return Icon(icon, size: 32);
+    } else {
+      return Icon(icon, size: 20);
+    }
   }
 
   ButtonStyle _generateStyle(BuildContext context) {

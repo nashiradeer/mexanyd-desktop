@@ -23,24 +23,16 @@ class _InOutInputState extends State<InOutInputPage> {
     return MexanydPage(
       actions: [
         const MexanydPageButton(
-          label: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Entrada", style: TextStyle(fontSize: 10)),
-              Text("Saída", style: TextStyle(fontSize: 10)),
-            ],
-          ),
-          icon: Icon(Icons.swap_vert_rounded, size: 20),
+          text1: "Entrada",
+          text2: "Saída",
+          icon: Icons.swap_vert_rounded,
           onPressed: null,
         ),
         const SizedBox(height: 5),
         MexanydPageButton(
-          label: const Text("Listar", style: TextStyle(fontSize: 12)),
-          icon: const Icon(
-            Icons.list,
-            size: 32,
-          ),
-          onPressed: () => Navigator.popAndPushNamed(context, '/inout/list'),
+          text1: "Listar",
+          icon: Icons.list_alt_rounded,
+          onPressed: () => Navigator.popAndPushNamed(context, "/inout/list"),
         ),
       ],
       child: Center(
