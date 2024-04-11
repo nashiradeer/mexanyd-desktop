@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
-import 'package:mexanyd_desktop/theme.dart';
+import 'package:mexanyd_desktop/inout/base.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
 class InOutListPage extends StatefulWidget {
@@ -15,15 +15,22 @@ class _InOutListState extends State<InOutListPage> {
   final TextEditingController _yearController = TextEditingController();
   final TextEditingController _monthController = TextEditingController();
   final TextEditingController _dayController = TextEditingController();
+  final InOutController _inOutController = InOutController();
 
   bool _yearError = false;
   bool _monthError = false;
   bool _dayError = false;
 
-  Future<List<InOut>?>? _operation;
-
   @override
   Widget build(BuildContext context) {
+    final today = DateTime.now();
+
+    _yearController.text = today.year.toString().padLeft(4, "0");
+    _monthController.text = today.month.toString().padLeft(2, "0");
+    _dayController.text = today.day.toString().padLeft(2, "0");
+
+    _fetch();
+
     return MexanydPage(
       title: "Listar",
       icon: Icons.list_alt_rounded,
@@ -166,7 +173,7 @@ class _InOutListState extends State<InOutListPage> {
                 ],
               ),
               const SizedBox(height: 10),
-              _process(),
+              InOutList(_inOutController),
             ],
           ),
         ),
@@ -224,135 +231,12 @@ class _InOutListState extends State<InOutListPage> {
       });
     }
 
-    setState(() {
-      _operation = globalDatabase.listInOutByCreation(year,
-          month: month, day: day, limit: 100000);
+    _inOutController.update(true, inOutList: null, error: null);
+    globalDatabase.listInOutByCreation(year, month: month, day: day).then(
+        (value) {
+      _inOutController.update(false, inOutList: value);
+    }, onError: (error) {
+      _inOutController.update(false, error: error.toString(), inOutList: null);
     });
-  }
-
-  Widget _process() {
-    if (_operation == null) {
-      return const Expanded(
-        child: Center(
-          child: Text("Nenhum dado a ser exibido",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-        ),
-      );
-    } else {
-      return FutureBuilder(
-        future: _operation,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _parse(snapshot);
-          } else if (snapshot.hasError) {
-            return Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error,
-                      color: Colors.red,
-                      size: 150,
-                    ),
-                    const SizedBox(height: 10),
-                    const Text("Erro ao carregar dados",
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 10),
-                    Text(snapshot.error.toString()),
-                  ],
-                ),
-              ),
-            );
-          } else {
-            return const Expanded(
-              child: Center(
-                child: CircularProgressIndicator(
-                    strokeWidth: 10,
-                    strokeAlign: 1,
-                    strokeCap: StrokeCap.round,
-                    color: Colors.deepPurpleAccent),
-              ),
-            );
-          }
-        },
-      );
-    }
-  }
-
-  Widget _parse(AsyncSnapshot snapshot) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(
-            "Total: ${snapshot.data.fold(0, (previousValue, element) => previousValue + element.value).toStringAsFixed(2)}",
-            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: listBackground(context),
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-              ),
-              padding: const EdgeInsets.only(top: 5, bottom: 5),
-              child: CustomScrollView(
-                shrinkWrap: true,
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final item = snapshot.data?[index];
-                        return Container(
-                          margin: const EdgeInsets.only(
-                              bottom: 5, left: 5, right: 15),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              color: Theme.of(context).colorScheme.background),
-                          child: ListTile(
-                            title: _generate(item),
-                          ),
-                        );
-                      },
-                      childCount: snapshot.data?.length,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _generate(InOut? item) {
-    var row = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 100,
-          child: Text(
-            item!.value.toStringAsFixed(2),
-            textAlign: TextAlign.end,
-            style: TextStyle(
-              color: item.value > 0 ? Colors.green : Colors.red,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
-    );
-
-    if (item.description.isNotEmpty) {
-      row.children.add(const SizedBox(width: 20));
-      row.children.add(Text(item.description));
-    }
-
-    return row;
   }
 }

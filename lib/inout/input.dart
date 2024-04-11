@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
-import 'package:mexanyd_desktop/theme.dart';
+import 'package:mexanyd_desktop/inout/base.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
 class InOutInputPage extends StatefulWidget {
@@ -14,11 +14,21 @@ class InOutInputPage extends StatefulWidget {
 class _InOutInputState extends State<InOutInputPage> {
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final InOutController _inOutController = InOutController();
   bool _error = false;
 
   @override
   Widget build(BuildContext context) {
     var today = DateTime.now();
+    _inOutController.update(true, inOutList: null, error: null);
+    globalDatabase
+        .listInOutByCreation(today.year,
+            month: today.month, day: today.day, reversed: true)
+        .then((value) {
+      _inOutController.update(false, inOutList: value);
+    }, onError: (error) {
+      _inOutController.update(false, error: error.toString(), inOutList: null);
+    });
 
     return MexanydPage(
       title: "Entrada/Saída",
@@ -129,48 +139,9 @@ class _InOutInputState extends State<InOutInputPage> {
               ),
               const SizedBox(height: 10),
               // Today list
-              FutureBuilder(
-                future: globalDatabase.listInOutByCreation(today.year,
-                    month: today.month,
-                    day: today.day,
-                    limit: 100000,
-                    reversed: true),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return _parse(snapshot);
-                  } else if (snapshot.hasError) {
-                    return Expanded(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.error,
-                              color: Colors.red,
-                              size: 150,
-                            ),
-                            const SizedBox(height: 10),
-                            const Text("Erro ao carregar dados",
-                                style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.bold)),
-                            const SizedBox(height: 10),
-                            Text(snapshot.error.toString()),
-                          ],
-                        ),
-                      ),
-                    );
-                  } else {
-                    return const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                            strokeWidth: 10,
-                            strokeAlign: 1,
-                            strokeCap: StrokeCap.round,
-                            color: Colors.deepPurpleAccent),
-                      ),
-                    );
-                  }
-                },
+              InOutList(
+                _inOutController,
+                deleteButton: true,
               ),
             ],
           ),
@@ -204,88 +175,5 @@ class _InOutInputState extends State<InOutInputPage> {
     setState(() {
       _error = false;
     });
-  }
-
-  Widget _parse(AsyncSnapshot snapshot) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(
-            "Total: ${snapshot.data.fold(0, (previousValue, element) => previousValue + element.value).toStringAsFixed(2)}",
-            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: listBackground(context),
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-              ),
-              padding: const EdgeInsets.only(top: 5, bottom: 5),
-              child: CustomScrollView(
-                shrinkWrap: true,
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final item = snapshot.data?[index];
-                        return Container(
-                          margin: const EdgeInsets.only(
-                              bottom: 5, left: 5, right: 15),
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              color: Theme.of(context).colorScheme.background),
-                          child: ListTile(
-                            title: _generate(item),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                globalDatabase
-                                    .deleteInOut(item.id)
-                                    .then((value) => setState(() {}));
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                      childCount: snapshot.data?.length,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _generate(InOut? item) {
-    var row = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 100,
-          child: Text(
-            item!.value.toStringAsFixed(2),
-            textAlign: TextAlign.end,
-            style: TextStyle(
-              color: item.value > 0 ? Colors.green : Colors.red,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
-    );
-
-    if (item.description.isNotEmpty) {
-      row.children.add(const SizedBox(width: 20));
-      row.children.add(Text(item.description));
-    }
-
-    return row;
   }
 }
