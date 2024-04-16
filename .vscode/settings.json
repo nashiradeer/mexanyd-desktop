@@ -1,11 +1,14 @@
 {
     "cSpell.words": [
         "APPDATA",
+        "datetime",
         "fullscreen",
         "inout",
+        "localtime",
         "mexanyd",
         "prefs",
         "sqflite",
+        "strftime",
         "unmaximize"
     ]
 }
