@@ -232,8 +232,7 @@ class _InOutListState extends State<InOutListPage> {
     }
 
     _inOutController.update(true, inOutList: null, error: null);
-    globalDatabase.listInOutByCreation(year, month: month, day: day).then(
-        (value) {
+    globalDatabase.listInOut(year, month, day: day).then((value) {
       _inOutController.update(false, inOutList: value);
     }, onError: (error) {
       _inOutController.update(false, error: error.toString(), inOutList: null);

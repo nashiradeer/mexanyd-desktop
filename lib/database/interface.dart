@@ -1,32 +1,63 @@
 late IDatabase globalDatabase;
 
 abstract class IDatabase {
-  /// Inserts a new in/out with the given [value] and [description].
-  Future<void> insertInOut(double value, {String description = ''});
+  /// Inserts a new in/out with the given [value], [type] and [description].
+  Future<void> insertInOut(double value, InOutType type,
+      {String description = ''});
 
   /// Deletes the in/out with the given [id].
   Future<void> deleteInOut(int id);
 
-  /// Gets the in/out with the given [id].
-  Future<InOut?> getInOut(int id);
-
   /// Lists the in/outs created in the given creation date.
-  Future<List<InOut>> listInOutByCreation(int year,
-      {int? month,
-      int? day,
-      int limit = 10,
-      int offset = 0,
-      bool reversed = false});
+  Future<List<InOut>> listInOut(
+    int year,
+    int month, {
+    int? day,
+    int limit = 50,
+    int offset = 0,
+    bool reversed = false,
+  });
+
+  /// Gets the total count of in/outs.
+  Future<int> countInOut(int year, int month, {int? day});
 }
 
-extension Date on DateTime {
-  /// Returns a string in the format 'yyyy-MM-dd'.
-  String toDateString() =>
-      '${year.toString().padLeft(4, '0')}-${month.toString().padLeft(2, '0')}-${day.toString().padLeft(2, '0')}';
+enum InOutType {
+  money,
+  credit,
+  future;
+
+  int get value {
+    switch (this) {
+      case InOutType.money:
+        return 0;
+      case InOutType.credit:
+        return 1;
+      case InOutType.future:
+        return 2;
+    }
+  }
+
+  static InOutType fromValue(int value) {
+    switch (value) {
+      case 0:
+        return InOutType.money;
+      case 1:
+        return InOutType.credit;
+      case 2:
+        return InOutType.future;
+      default:
+        throw ArgumentError('Invalid value: $value');
+    }
+  }
 }
 
 /// Represents an input or output.
 class InOut {
+  static const int moneyType = 0;
+  static const int creditType = 1;
+  static const int futureType = 2;
+
   /// The unique identifier of the in/out.
   final int id;
 
@@ -39,7 +70,11 @@ class InOut {
   /// The description of the in/out.
   final String description;
 
-  InOut(this.id, this.value, {DateTime? creation, this.description = ''})
+  /// The type of the in/out.
+  final InOutType type;
+
+  InOut(this.id, this.value, this.type,
+      {DateTime? creation, this.description = ''})
       : creation = creation ?? DateTime.now();
 
   /// Creates an [InOut] from a map.
@@ -47,6 +82,7 @@ class InOut {
     return InOut(
       map['id'] as int,
       map['value'] as double,
+      InOutType.fromValue(map['type'] as int),
       creation: DateTime.parse(map['creation'] as String),
       description: map['description'] as String,
     );
@@ -57,7 +93,8 @@ class InOut {
     return {
       'id': id,
       'value': value,
-      'creation': creation.toDateString(),
+      'type': type.value,
+      'creation': creation.toIso8601String(),
       'description': description,
     };
   }

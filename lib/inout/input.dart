@@ -22,8 +22,7 @@ class _InOutInputState extends State<InOutInputPage> {
     var today = DateTime.now();
     _inOutController.update(true, inOutList: null, error: null);
     globalDatabase
-        .listInOutByCreation(today.year,
-            month: today.month, day: today.day, reversed: true)
+        .listInOut(today.year, today.month, day: today.day, reversed: true)
         .then((value) {
       _inOutController.update(false, inOutList: value);
     }, onError: (error) {
@@ -167,7 +166,8 @@ class _InOutInputState extends State<InOutInputPage> {
 
     final String description = _descriptionController.text;
 
-    globalDatabase.insertInOut(value, description: description);
+    globalDatabase.insertInOut(value, InOutType.money,
+        description: description);
 
     _valueController.clear();
     _descriptionController.clear();

@@ -11,11 +11,11 @@ class LocalDatabase extends IDatabase {
 
   static Future<LocalDatabase> open() async {
     final dir = await getApplicationSupportDirectory();
-    final db_path = join(dir.path, "mexanyd.db");
+    final dbPath = join(dir.path, "mexanyd.db");
 
     sqfliteFfiInit();
 
-    final database = await databaseFactoryFfi.openDatabase(db_path);
+    final database = await databaseFactoryFfi.openDatabase(dbPath);
 
     await database.execute("PRAGMA foreign_keys = ON");
 
@@ -23,12 +23,13 @@ class LocalDatabase extends IDatabase {
       CREATE TABLE IF NOT EXISTS in_out (
         id INTEGER PRIMARY KEY,
         value REAL NOT NULL,
-        creation TEXT NOT NULL,
-        description TEXT NOT NULL
+        creation TEXT NOT NULL DEFAULT datetime('now', 'localtime'),
+        description TEXT NOT NULL DEFAULT '',
+        type INTEGER NOT NULL DEFAULT 0,
       )
     ''');
 
-    return LocalDatabase._(db_path, database);
+    return LocalDatabase._(dbPath, database);
   }
 
   LocalDatabase._(this.path, this._database);
@@ -39,60 +40,70 @@ class LocalDatabase extends IDatabase {
   }
 
   @override
-  Future<InOut?> getInOut(int id) async {
-    var result = await _database.query(
-      "in_out",
-      columns: ["id", "value", "creation", "description"],
-      limit: 1,
-      where: "id = ?",
-      whereArgs: [id],
-    );
-
-    if (result.isEmpty) {
-      return null;
-    }
-
-    return InOut.fromMap(result.first);
-  }
-
-  @override
-  Future<void> insertInOut(double value, {String description = ''}) async {
+  Future<void> insertInOut(double value, InOutType type,
+      {String description = ''}) async {
     await _database.insert("in_out", {
-      "creation": DateTime.now().toDateString(),
       "value": value,
       "description": description,
+      "type": type.value,
     });
   }
 
   @override
-  Future<List<InOut>> listInOutByCreation(int year,
-      {int? month,
-      int? day,
-      int limit = 10,
-      int offset = 0,
-      bool reversed = false}) async {
-    var yearStr = year.toString().padLeft(4, '0');
-    var whereArg = "$yearStr%";
+  Future<List<InOut>> listInOut(
+    int year,
+    int month, {
+    int? day,
+    int limit = 50,
+    int offset = 0,
+    bool reversed = false,
+  }) {
+    final yearStr = year.toString().padLeft(4, '0');
+    final monthStr = month.toString().padLeft(2, '0');
+    final dayStr = day?.toString().padLeft(2, '0');
 
-    if (month != null) {
-      var monthStr = month.toString().padLeft(2, '0');
-
-      if (day != null) {
-        var dayStr = day.toString().padLeft(2, '0');
-        whereArg = "$yearStr-$monthStr-$dayStr";
-      } else {
-        whereArg = "$yearStr-$monthStr%";
-      }
+    var where = "strftime('%Y-%m', creation) = ?";
+    var whereArgs = ["$yearStr-$monthStr"];
+    if (dayStr != null) {
+      where = "strftime('%Y-%m-%d', creation) = ?";
+      whereArgs = ["$yearStr-$monthStr-$dayStr"];
     }
 
-    return await _database
-        .query("in_out",
-            columns: ["id", "value", "creation", "description"],
-            limit: limit,
-            offset: offset,
-            where: "creation LIKE ?",
-            orderBy: "id ${reversed ? 'DESC' : 'ASC'}",
-            whereArgs: [whereArg])
-        .then((value) => value.map((e) => InOut.fromMap(e)).toList());
+    final orderBy = reversed ? "creation DESC" : "creation ASC";
+
+    return _database
+        .query(
+          "in_out",
+          columns: ["id", "value", "creation", "description", "type"],
+          where: where,
+          whereArgs: whereArgs,
+          orderBy: orderBy,
+          limit: limit,
+          offset: offset,
+        )
+        .then((rows) => rows.map(InOut.fromMap).toList());
+  }
+
+  @override
+  Future<int> countInOut(int year, int month, {int? day}) {
+    final yearStr = year.toString().padLeft(4, '0');
+    final monthStr = month.toString().padLeft(2, '0');
+    final dayStr = day?.toString().padLeft(2, '0');
+
+    var where = "strftime('%Y-%m', creation) = ?";
+    var whereArgs = ["$yearStr-$monthStr"];
+    if (dayStr != null) {
+      where = "strftime('%Y-%m-%d', creation) = ?";
+      whereArgs = ["$yearStr-$monthStr-$dayStr"];
+    }
+
+    return _database
+        .query(
+          "in_out",
+          columns: ["COUNT(*)"],
+          where: where,
+          whereArgs: whereArgs,
+        )
+        .then((rows) => rows.first.values.first as int);
   }
 }
