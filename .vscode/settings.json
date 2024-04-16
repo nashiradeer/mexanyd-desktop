@@ -4,6 +4,7 @@
         "fullscreen",
         "inout",
         "mexanyd",
+        "prefs",
         "sqflite",
         "unmaximize"
     ]
