@@ -1,21 +1,21 @@
-import 'dart:io';
-
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class LocalDatabase extends IDatabase {
+  static const version = 1;
+
   final String path;
   final Database _database;
 
   static Future<LocalDatabase> open() async {
-    var baseDir = Platform.environment['APPDATA'] ?? "C:\\ProgramData";
-    var dataDir = Directory(join(baseDir, "Mexanyd Desktop"));
-    await dataDir.create(recursive: true);
+    final dir = await getApplicationSupportDirectory();
+    final db_path = join(dir.path, "mexanyd.db");
 
-    var path = join(dataDir.path, "mexanyd.db");
     sqfliteFfiInit();
-    var database = await databaseFactoryFfi.openDatabase(path);
+
+    final database = await databaseFactoryFfi.openDatabase(db_path);
 
     await database.execute("PRAGMA foreign_keys = ON");
 
@@ -28,7 +28,7 @@ class LocalDatabase extends IDatabase {
       )
     ''');
 
-    return LocalDatabase._(path, database);
+    return LocalDatabase._(db_path, database);
   }
 
   LocalDatabase._(this.path, this._database);
