@@ -23,6 +23,11 @@ ThemeData darkTheme() {
     colorScheme: baseTheme.colorScheme.copyWith(
       primary: Colors.blue,
       background: Colors.black,
+      surface: Colors.transparent,
+      surfaceVariant: Colors.grey[900],
+      onBackground: Colors.white,
+      onSurface: Colors.white,
+      onSurfaceVariant: Colors.white,
     ),
   );
 }
