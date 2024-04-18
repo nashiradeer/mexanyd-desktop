@@ -106,4 +106,27 @@ class LocalDatabase extends IDatabase {
         )
         .then((rows) => rows.first.values.first as int);
   }
+
+  @override
+  Future<double> totalInOut(int year, int month, {int? day}) {
+    final yearStr = year.toString().padLeft(4, '0');
+    final monthStr = month.toString().padLeft(2, '0');
+    final dayStr = day?.toString().padLeft(2, '0');
+
+    var where = "strftime('%Y-%m', creation, 'localtime') = ?";
+    var whereArgs = ["$yearStr-$monthStr"];
+    if (dayStr != null) {
+      where = "strftime('%Y-%m-%d', creation, 'localtime') = ?";
+      whereArgs = ["$yearStr-$monthStr-$dayStr"];
+    }
+
+    return _database
+        .query(
+          "in_out",
+          columns: ["SUM(value)"],
+          where: where,
+          whereArgs: whereArgs,
+        )
+        .then((rows) => rows.first.values.first as double);
+  }
 }

@@ -20,6 +20,9 @@ abstract class IDatabase {
 
   /// Gets the total count of in/outs.
   Future<int> countInOut(int year, int month, {int? day});
+
+  /// Gets the total value of in/outs.
+  Future<double> totalInOut(int year, int month, {int? day});
 }
 
 enum InOutType {
