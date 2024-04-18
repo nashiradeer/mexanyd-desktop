@@ -14,21 +14,11 @@ class InOutInputPage extends StatefulWidget {
 class _InOutInputState extends State<InOutInputPage> {
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final InOutController _inOutController = InOutController();
+  final InOutController _inOutController = InOutController.fromDateTimeNow();
   bool _error = false;
 
   @override
   Widget build(BuildContext context) {
-    var today = DateTime.now();
-    _inOutController.update(true, inOutList: null, error: null);
-    globalDatabase
-        .listInOut(today.year, today.month, day: today.day, reversed: true)
-        .then((value) {
-      _inOutController.update(false, inOutList: value);
-    }, onError: (error) {
-      _inOutController.update(false, error: error.toString(), inOutList: null);
-    });
-
     return MexanydPage(
       title: "Entrada/Saída",
       icon: Icons.swap_vert_rounded,
@@ -89,8 +79,6 @@ class _InOutInputState extends State<InOutInputPage> {
                   Expanded(
                     child: TextField(
                       controller: _descriptionController,
-                      maxLength: 30,
-                      maxLines: 1,
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
@@ -141,6 +129,7 @@ class _InOutInputState extends State<InOutInputPage> {
               InOutList(
                 _inOutController,
                 deleteButton: true,
+                reversed: true,
               ),
             ],
           ),

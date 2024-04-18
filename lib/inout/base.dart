@@ -1,198 +1,294 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 
 class InOutController extends ChangeNotifier {
-  List<InOut>? _inOutList;
-  String? _error;
-  bool _loading = false;
+  int year;
+  int month;
+  int? day;
 
-  void update(bool loading, {List<InOut>? inOutList, String? error}) {
-    _inOutList = inOutList;
-    _error = error;
-    _loading = loading;
+  InOutController(this.year, this.month, [this.day]);
+
+  static InOutController fromDateTime(DateTime dateTime) {
+    return InOutController(dateTime.year, dateTime.month, dateTime.day);
+  }
+
+  static InOutController fromDateTimeNow() {
+    final now = DateTime.now();
+    return InOutController.fromDateTime(now);
+  }
+
+  static InOutController fromDateTimeMonth(DateTime dateTime) {
+    return InOutController(dateTime.year, dateTime.month);
+  }
+
+  static InOutController fromDateTimeMonthNow() {
+    final now = DateTime.now();
+    return InOutController.fromDateTimeMonth(now);
+  }
+
+  void fetch(int year, int month, [int? day]) {
+    this.year = year;
+    this.month = month;
+    this.day = day;
     notifyListeners();
   }
+
+  void reload() {
+    notifyListeners();
+  }
+}
+
+class _InOutData {
+  final List<InOut> data;
+  final int pageCount;
+  final double totalValue;
+
+  const _InOutData(this.data, this.pageCount, this.totalValue);
 }
 
 class InOutList extends StatefulWidget {
   final InOutController controller;
   final bool deleteButton;
+  final int itemPerPage;
+  final bool reversed;
 
-  const InOutList(this.controller, {super.key, this.deleteButton = false});
+  const InOutList(this.controller,
+      {super.key,
+      this.deleteButton = false,
+      this.itemPerPage = 30,
+      this.reversed = false});
 
   @override
   State<InOutList> createState() => _InOutListState();
 }
 
 class _InOutListState extends State<InOutList> {
-  @override
-  Widget build(BuildContext context) {
-    final loading = widget.controller._loading;
-    final error = widget.controller._error;
-    final inOutList = widget.controller._inOutList;
-
-    if (inOutList != null && inOutList.isNotEmpty) {
-      return _buildList(widget.controller._inOutList!);
-    } else if (error != null) {
-      return _buildError(error);
-    } else if (loading) {
-      return const Expanded(
-        child: Center(
-          child: CircularProgressIndicator(
-              strokeWidth: 10,
-              strokeAlign: 1,
-              strokeCap: StrokeCap.round,
-              color: Colors.blue),
-        ),
-      );
-    } else {
-      return const Expanded(
-        child: Center(
-          child: Text(
-            "Nenhum item encontrado.",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-        ),
-      );
-    }
-  }
+  int page = 0;
+  int pageCount = 0;
 
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(_update);
+    widget.controller.addListener(_updateWidget);
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(_update);
+    widget.controller.removeListener(_updateWidget);
     super.dispose();
   }
 
-  void _update() {
+  void _updateWidget() {
     setState(() {});
   }
 
-  Widget _buildError(String error) {
+  void _nextPage() {
+    if (page < pageCount - 1) {
+      setState(() {
+        page++;
+      });
+    }
+  }
+
+  void _prevPage() {
+    if (page > 0) {
+      setState(() {
+        page--;
+      });
+    }
+  }
+
+  Future<_InOutData> _fetchData() async {
+    final year = widget.controller.year;
+    final month = widget.controller.month;
+    final day = widget.controller.day;
+
+    final dataSize = await globalDatabase.countInOut(year, month, day);
+    final pageCount = (dataSize / widget.itemPerPage).ceil();
+    final data = await globalDatabase.listInOut(year, month,
+        day: day,
+        limit: widget.itemPerPage,
+        offset: page * widget.itemPerPage,
+        reversed: widget.reversed);
+    final totalValue = await globalDatabase.totalInOut(year, month, day);
+
+    return _InOutData(data, pageCount, totalValue);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: _fetchData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final data = snapshot.data as _InOutData;
+
+            if (data.data.isEmpty) {
+              return _buildEmpty();
+            }
+
+            if (data.pageCount != pageCount) {
+              page = 0;
+              pageCount = data.pageCount;
+            }
+
+            return _buildList(data);
+          } else if (snapshot.hasError) {
+            return _buildError(snapshot.error.toString());
+          }
+
+          return _buildLoading();
+        });
+  }
+
+  Widget _buildLoading() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _buildError(String message) {
     return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error, size: 100, color: Colors.red),
+          const Text(
+            "Error",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+          Text(message),
+          const SizedBox(height: 50),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmpty() {
+    return const Expanded(
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error,
-              color: Colors.red,
-              size: 150,
-            ),
-            const SizedBox(height: 10),
-            const Text("Erro ao carregar dados",
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            Text(error),
-          ],
+        child: Text(
+          "Nenhum dado encontrado",
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
       ),
     );
   }
 
-  Widget _buildList(List<InOut> items) {
+  Widget _buildList(_InOutData data) {
     return Expanded(
       child: Column(
         children: [
-          Text(
-            "Total: ${items.fold(0.0, (previousValue, element) => previousValue + element.value).toStringAsFixed(2)}",
-            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
+          _buildPaginator(data.totalValue),
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-              ),
-              padding: const EdgeInsets.only(top: 5, bottom: 5),
-              child: CustomScrollView(
-                shrinkWrap: true,
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final item = items[index];
-                        return InOutListItem(
-                          item,
-                          trailing: (widget.deleteButton)
-                              ? IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    globalDatabase.deleteInOut(item.id).then(
-                                      (value) {
-                                        items.remove(item);
-                                        setState(() {});
-                                      },
-                                    );
-                                  },
-                                )
-                              : null,
-                        );
-                      },
-                      childCount: items.length,
-                    ),
-                  ),
-                ],
-              ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: data.data.length,
+              itemBuilder: (context, index) {
+                final inOut = data.data[index];
+                return _InOutItem(
+                    inOut, widget.controller, widget.deleteButton);
+              },
             ),
           ),
         ],
       ),
     );
   }
+
+  Widget _buildPaginator(double totalValue) {
+    return Row(
+      children: [
+        Text(
+          "Total: $totalValue",
+          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
+        const Spacer(),
+        IconButton(
+          onPressed: (page > 0) ? _prevPage : null,
+          icon: const Icon(Icons.arrow_back_ios_rounded),
+        ),
+        Text("${page + 1}/$pageCount"),
+        IconButton(
+          onPressed: (page < pageCount - 1) ? _nextPage : null,
+          icon: const Icon(Icons.arrow_forward_ios_rounded),
+        ),
+      ],
+    );
+  }
 }
 
-class InOutListItem extends StatelessWidget {
+class _InOutItem extends StatelessWidget {
   final InOut inOut;
-  final Widget? trailing;
+  final bool deleteButton;
+  final InOutController controller;
 
-  const InOutListItem(this.inOut, {super.key, this.trailing});
+  const _InOutItem(this.inOut, this.controller, [this.deleteButton = false]);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 5, left: 5, right: 15),
+      margin: const EdgeInsets.only(right: 20, bottom: 5, top: 5),
       decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: Theme.of(context).colorScheme.surfaceVariant),
+        color: Theme.of(context).colorScheme.surfaceVariant,
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: ListTile(
-        title: _generate(),
-        trailing: trailing,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "${DateFormat.yMd().add_Hms().format(inOut.creation)} - ${_typeToString(inOut.type)}",
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w400),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "R\$ ${inOut.value.toStringAsFixed(2)}",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: (inOut.value < 0) ? Colors.red : Colors.green),
+                ),
+                if (inOut.description.isNotEmpty) ...[
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      inOut.description,
+                      style: const TextStyle(fontSize: 20),
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
+        trailing: deleteButton
+            ? IconButton(
+                onPressed: () {
+                  globalDatabase.deleteInOut(inOut.id).then((value) {
+                    controller.reload();
+                  });
+                },
+                icon: const Icon(Icons.delete),
+              )
+            : null,
       ),
     );
   }
 
-  Widget _generate() {
-    var row = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 100,
-          child: Text(
-            inOut.value.toStringAsFixed(2),
-            textAlign: TextAlign.end,
-            style: TextStyle(
-              color: inOut.value > 0 ? Colors.green : Colors.red,
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
-    );
-
-    if (inOut.description.isNotEmpty) {
-      row.children.add(const SizedBox(width: 20));
-      row.children.add(Text(inOut.description));
+  String _typeToString(InOutType type) {
+    switch (type) {
+      case InOutType.money:
+        return "Dinheiro";
+      case InOutType.credit:
+        return "Cartão";
+      case InOutType.future:
+        return "Prazo";
     }
-
-    return row;
   }
 }

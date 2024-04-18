@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/inout/base.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
@@ -15,7 +14,7 @@ class _InOutListState extends State<InOutListPage> {
   final TextEditingController _yearController = TextEditingController();
   final TextEditingController _monthController = TextEditingController();
   final TextEditingController _dayController = TextEditingController();
-  final InOutController _inOutController = InOutController();
+  final InOutController _inOutController = InOutController.fromDateTimeNow();
 
   bool _yearError = false;
   bool _monthError = false;
@@ -23,11 +22,9 @@ class _InOutListState extends State<InOutListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final today = DateTime.now();
-
-    _yearController.text = today.year.toString().padLeft(4, "0");
-    _monthController.text = today.month.toString().padLeft(2, "0");
-    _dayController.text = today.day.toString().padLeft(2, "0");
+    _yearController.text = _inOutController.year.toString().padLeft(4, "0");
+    _monthController.text = _inOutController.month.toString().padLeft(2, "0");
+    _dayController.text = _inOutController.day.toString().padLeft(2, "0");
 
     _fetch();
 
@@ -231,11 +228,6 @@ class _InOutListState extends State<InOutListPage> {
       });
     }
 
-    _inOutController.update(true, inOutList: null, error: null);
-    globalDatabase.listInOut(year, month, day: day).then((value) {
-      _inOutController.update(false, inOutList: value);
-    }, onError: (error) {
-      _inOutController.update(false, error: error.toString(), inOutList: null);
-    });
+    _inOutController.fetch(year, month, day);
   }
 }
