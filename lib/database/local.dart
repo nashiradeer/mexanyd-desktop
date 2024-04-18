@@ -23,9 +23,9 @@ class LocalDatabase extends IDatabase {
       CREATE TABLE IF NOT EXISTS in_out (
         id INTEGER PRIMARY KEY,
         value REAL NOT NULL,
-        creation TEXT NOT NULL DEFAULT datetime('now', 'localtime'),
+        creation TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
         description TEXT NOT NULL DEFAULT '',
-        type INTEGER NOT NULL DEFAULT 0,
+        type INTEGER NOT NULL DEFAULT 0
       )
     ''');
 
@@ -62,10 +62,10 @@ class LocalDatabase extends IDatabase {
     final monthStr = month.toString().padLeft(2, '0');
     final dayStr = day?.toString().padLeft(2, '0');
 
-    var where = "strftime('%Y-%m', creation) = ?";
+    var where = "strftime('%Y-%m', creation, 'localtime') = ?";
     var whereArgs = ["$yearStr-$monthStr"];
     if (dayStr != null) {
-      where = "strftime('%Y-%m-%d', creation) = ?";
+      where = "strftime('%Y-%m-%d', creation, 'localtime') = ?";
       whereArgs = ["$yearStr-$monthStr-$dayStr"];
     }
 
@@ -90,10 +90,10 @@ class LocalDatabase extends IDatabase {
     final monthStr = month.toString().padLeft(2, '0');
     final dayStr = day?.toString().padLeft(2, '0');
 
-    var where = "strftime('%Y-%m', creation) = ?";
+    var where = "strftime('%Y-%m', creation, 'localtime') = ?";
     var whereArgs = ["$yearStr-$monthStr"];
     if (dayStr != null) {
-      where = "strftime('%Y-%m-%d', creation) = ?";
+      where = "strftime('%Y-%m-%d', creation, 'localtime') = ?";
       whereArgs = ["$yearStr-$monthStr-$dayStr"];
     }
 
