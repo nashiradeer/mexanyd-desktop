@@ -79,26 +79,4 @@ class InOut {
   InOut(this.id, this.value, this.type,
       {DateTime? creation, this.description = ''})
       : creation = creation ?? DateTime.now();
-
-  /// Creates an [InOut] from a map.
-  factory InOut.fromMap(Map<String, Object?> map) {
-    return InOut(
-      map['id'] as int,
-      map['value'] as double,
-      InOutType.fromValue(map['type'] as int),
-      creation: DateTime.parse(map['creation'] as String),
-      description: map['description'] as String,
-    );
-  }
-
-  /// Converts the [InOut] to a map.
-  Map<String, Object?> toMap() {
-    return {
-      'id': id,
-      'value': value,
-      'type': type.value,
-      'creation': creation.toIso8601String(),
-      'description': description,
-    };
-  }
 }
