@@ -81,7 +81,15 @@ class LocalDatabase extends IDatabase {
           limit: limit,
           offset: offset,
         )
-        .then((rows) => rows.map(InOut.fromMap).toList());
+        .then((rows) => rows
+            .map((item) => InOut(
+                  item['id'] as int,
+                  item['value'] as double,
+                  InOutType.fromValue(item['type'] as int),
+                  description: item['description'] as String,
+                  creation: DateTime.parse(item['creation'] as String),
+                ))
+            .toList());
   }
 
   @override
@@ -127,6 +135,6 @@ class LocalDatabase extends IDatabase {
           where: where,
           whereArgs: whereArgs,
         )
-        .then((rows) => rows.first.values.first as double);
+        .then((rows) => (rows.first.values.first ?? 0.0) as double);
   }
 }
