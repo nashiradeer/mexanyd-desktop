@@ -85,7 +85,7 @@ class LocalDatabase extends IDatabase {
   }
 
   @override
-  Future<int> countInOut(int year, int month, {int? day}) {
+  Future<int> countInOut(int year, int month, [int? day]) {
     final yearStr = year.toString().padLeft(4, '0');
     final monthStr = month.toString().padLeft(2, '0');
     final dayStr = day?.toString().padLeft(2, '0');
@@ -108,7 +108,7 @@ class LocalDatabase extends IDatabase {
   }
 
   @override
-  Future<double> totalInOut(int year, int month, {int? day}) {
+  Future<double> totalInOut(int year, int month, [int? day]) {
     final yearStr = year.toString().padLeft(4, '0');
     final monthStr = month.toString().padLeft(2, '0');
     final dayStr = day?.toString().padLeft(2, '0');
