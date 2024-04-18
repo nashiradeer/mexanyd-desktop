@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/intl_standalone.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/database/local.dart';
 import 'package:mexanyd_desktop/inout/input.dart';
@@ -10,6 +13,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
+  await findSystemLocale();
+  initializeDateFormatting(Intl.systemLocale);
+
   final prefs = await SharedPreferences.getInstance();
 
   WidgetsFlutterBinding.ensureInitialized();
