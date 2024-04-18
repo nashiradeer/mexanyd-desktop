@@ -145,11 +145,11 @@ class MexanydPageButton extends StatelessWidget {
     if (text2 == null) {
       return Text(text1, style: const TextStyle(fontSize: 12));
     } else {
-      return const Column(
+      return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Entrada", style: TextStyle(fontSize: 10)),
-          Text("Saída", style: TextStyle(fontSize: 10)),
+          Text(text1, style: const TextStyle(fontSize: 10)),
+          Text(text2!, style: const TextStyle(fontSize: 10)),
         ],
       );
     }
