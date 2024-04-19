@@ -144,3 +144,110 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
     );
   }
 }
+
+class MexanydIconButtonData {
+  final IconData icon;
+  final void Function()? onPressed;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+
+  const MexanydIconButtonData({
+    required this.icon,
+    required this.onPressed,
+    this.backgroundColor,
+    this.foregroundColor,
+  });
+}
+
+class MexanydIconButton extends StatelessWidget {
+  final List<MexanydIconButtonData> data;
+  final double size;
+  final double borderRadius;
+
+  const MexanydIconButton({
+    super.key,
+    required this.data,
+    this.size = 30,
+    this.borderRadius = 10,
+  });
+
+  Color _backgroundColor(Color? color, BuildContext context) {
+    return color ?? Theme.of(context).colorScheme.primary;
+  }
+
+  Color _foregroundColor(Color? color, BuildContext context) {
+    return color ?? Theme.of(context).colorScheme.background;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (data.length < 2) {
+      throw Exception('Buttons length must be greater than 1');
+    }
+
+    final first = data.first;
+    final last = data.last;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: IconButton(
+            icon: Icon(first.icon),
+            iconSize: size,
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(borderRadius),
+                    bottomLeft: Radius.circular(borderRadius),
+                  ),
+                ),
+              ),
+              backgroundColor: MaterialStateProperty.all(
+                  _backgroundColor(first.backgroundColor, context)),
+            ),
+            color: _foregroundColor(first.foregroundColor, context),
+            onPressed: first.onPressed,
+          ),
+        ),
+        ...data.sublist(1, data.length - 1).map((d) {
+          return Expanded(
+            child: IconButton(
+              icon: Icon(d.icon),
+              iconSize: size,
+              style: ButtonStyle(
+                shape:
+                    MaterialStateProperty.all(const RoundedRectangleBorder()),
+                backgroundColor: MaterialStateProperty.all(
+                    _backgroundColor(d.backgroundColor, context)),
+              ),
+              color: _foregroundColor(d.foregroundColor, context),
+              onPressed: d.onPressed,
+            ),
+          );
+        }),
+        Expanded(
+          child: IconButton(
+            icon: Icon(last.icon),
+            iconSize: size,
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(borderRadius),
+                    bottomRight: Radius.circular(borderRadius),
+                  ),
+                ),
+              ),
+              backgroundColor: MaterialStateProperty.all(
+                  _backgroundColor(last.backgroundColor, context)),
+            ),
+            color: _foregroundColor(last.foregroundColor, context),
+            onPressed: last.onPressed,
+          ),
+        ),
+      ],
+    );
+  }
+}
