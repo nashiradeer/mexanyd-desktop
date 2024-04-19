@@ -102,36 +102,30 @@ class _InOutInputState extends State<InOutInputPage> {
                       ),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              // Buttons
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.green),
-                        minimumSize:
-                            MaterialStateProperty.all(const Size(0, 60)),
-                      ),
-                      onPressed: () => _save(invert: false),
-                      child: const Text("Entrada",
-                          style: TextStyle(color: Colors.white, fontSize: 20)),
-                    ),
-                  ),
                   const SizedBox(width: 10),
-                  Expanded(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.red),
-                        minimumSize:
-                            MaterialStateProperty.all(const Size(0, 60)),
-                      ),
-                      onPressed: () => _save(invert: true),
-                      child: const Text("Saída",
-                          style: TextStyle(color: Colors.white, fontSize: 20)),
+                  SizedBox(
+                    width: 120,
+                    child: MexanydIconButton(
+                      borderRadius: 15,
+                      size: 40,
+                      data: [
+                        MexanydIconButtonData(
+                          icon: Icons.add_rounded,
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          onPressed: () {
+                            _save();
+                          },
+                        ),
+                        MexanydIconButtonData(
+                          icon: Icons.remove_rounded,
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          onPressed: () {
+                            _save(invert: true);
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],
