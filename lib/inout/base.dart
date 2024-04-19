@@ -201,7 +201,7 @@ class _InOutListState extends State<InOutList> {
     return Row(
       children: [
         Text(
-          "Total: $totalValue",
+          "R\$ ${totalValue.toStringAsFixed(2)}",
           style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
         const Spacer(),
@@ -239,7 +239,7 @@ class _InOutItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${DateFormat.yMd().add_Hms().format(inOut.creation)} - ${_typeToString(inOut.type)}",
+              DateFormat.yMd().add_Hms().format(inOut.creation),
               style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w400),
             ),
             Row(
@@ -267,6 +267,10 @@ class _InOutItem extends StatelessWidget {
             ),
           ],
         ),
+        leading: Icon(
+          _typeToIcon(inOut.type),
+          color: Theme.of(context).colorScheme.primary,
+        ),
         trailing: deleteButton
             ? IconButton(
                 onPressed: () {
@@ -281,14 +285,14 @@ class _InOutItem extends StatelessWidget {
     );
   }
 
-  String _typeToString(InOutType type) {
+  IconData _typeToIcon(InOutType type) {
     switch (type) {
       case InOutType.money:
-        return "Dinheiro";
+        return Icons.money_rounded;
       case InOutType.credit:
-        return "Cartão";
+        return Icons.credit_card_rounded;
       case InOutType.future:
-        return "Prazo";
+        return Icons.alarm_rounded;
     }
   }
 }
