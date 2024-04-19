@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/inout/base.dart';
+import 'package:mexanyd_desktop/widgets/buttons.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
 class InOutInputPage extends StatefulWidget {
@@ -15,6 +16,8 @@ class _InOutInputState extends State<InOutInputPage> {
   final TextEditingController _valueController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final InOutController _inOutController = InOutController.fromDateTimeNow();
+  final MexanydRadioController _mexanydRadioController =
+      MexanydRadioController();
   bool _error = false;
 
   @override
@@ -43,6 +46,15 @@ class _InOutInputState extends State<InOutInputPage> {
               const EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 10),
           child: Column(
             children: [
+              MexanydIconRadio(
+                icons: const [
+                  Icons.money_rounded,
+                  Icons.credit_card_rounded,
+                  Icons.alarm_rounded,
+                ],
+                controller: _mexanydRadioController,
+              ),
+              const SizedBox(height: 10),
               // TextFields
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -153,10 +165,11 @@ class _InOutInputState extends State<InOutInputPage> {
       value = -value;
     }
 
+    final type = InOutType.fromValue(_mexanydRadioController.selectedIndex);
+
     final String description = _descriptionController.text;
 
-    globalDatabase.insertInOut(value, InOutType.money,
-        description: description);
+    globalDatabase.insertInOut(value, type, description: description);
 
     _valueController.clear();
     _descriptionController.clear();
