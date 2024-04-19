@@ -74,7 +74,13 @@ class LocalDatabase extends IDatabase {
     return _database
         .query(
           "in_out",
-          columns: ["id", "value", "creation", "description", "type"],
+          columns: [
+            "id",
+            "value",
+            "datetime(creation, 'localtime') AS creation",
+            "description",
+            "type"
+          ],
           where: where,
           whereArgs: whereArgs,
           orderBy: orderBy,
