@@ -39,26 +39,26 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(updateState);
+    widget.controller.addListener(_updateState);
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(updateState);
+    widget.controller.removeListener(_updateState);
     super.dispose();
   }
 
-  void updateState() {
+  void _updateState() {
     setState(() {});
   }
 
-  Color foregroundColor(int index, BuildContext context) {
+  Color _foregroundColor(int index, BuildContext context) {
     return widget.controller.selectedIndex == index
         ? widget.selectedColor ?? Theme.of(context).colorScheme.background
         : widget.unselectedColor ?? Theme.of(context).colorScheme.primary;
   }
 
-  Color backgroundColor(int index, BuildContext context) {
+  Color _backgroundColor(int index, BuildContext context) {
     return widget.controller.selectedIndex == index
         ? widget.selectedColor ?? Theme.of(context).colorScheme.primary
         : widget.unselectedColor ??
@@ -68,18 +68,14 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
   @override
   Widget build(BuildContext context) {
     if (widget.icons.length < 2) {
-      throw Exception('icons length must be greater than 1');
+      throw Exception('Needs at least 2 icons to work properly');
     }
-
-    final icons = List.from(widget.icons);
-    final first = icons.removeAt(0);
-    final last = icons.removeLast();
 
     return Row(
       children: [
         Expanded(
           child: IconButton(
-            icon: Icon(first),
+            icon: Icon(widget.icons.first),
             iconSize: widget.size,
             style: ButtonStyle(
               shape: MaterialStateProperty.all(
@@ -91,16 +87,16 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
                 ),
               ),
               backgroundColor:
-                  MaterialStateProperty.all(backgroundColor(0, context)),
+                  MaterialStateProperty.all(_backgroundColor(0, context)),
             ),
-            color: foregroundColor(0, context),
+            color: _foregroundColor(0, context),
             onPressed: () {
               widget.controller.setSelectedIndex(0);
             },
           ),
         ),
-        ...icons.map((icon) {
-          final index = icons.indexOf(icon) + 1;
+        ...widget.icons.sublist(1, widget.icons.length - 1).map((icon) {
+          final index = widget.icons.indexOf(icon);
           return Expanded(
             child: IconButton(
               icon: Icon(icon),
@@ -109,9 +105,9 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
                 shape:
                     MaterialStateProperty.all(const RoundedRectangleBorder()),
                 backgroundColor:
-                    MaterialStateProperty.all(backgroundColor(index, context)),
+                    MaterialStateProperty.all(_backgroundColor(index, context)),
               ),
-              color: foregroundColor(index, context),
+              color: _foregroundColor(index, context),
               onPressed: () {
                 widget.controller.setSelectedIndex(index);
               },
@@ -120,7 +116,7 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
         }),
         Expanded(
           child: IconButton(
-            icon: Icon(last),
+            icon: Icon(widget.icons.last),
             iconSize: widget.size,
             style: ButtonStyle(
               shape: MaterialStateProperty.all(
@@ -132,11 +128,11 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
                 ),
               ),
               backgroundColor: MaterialStateProperty.all(
-                  backgroundColor(icons.length + 1, context)),
+                  _backgroundColor(widget.icons.length - 1, context)),
             ),
-            color: foregroundColor(icons.length + 1, context),
+            color: _foregroundColor(widget.icons.length - 1, context),
             onPressed: () {
-              widget.controller.setSelectedIndex(icons.length + 1);
+              widget.controller.setSelectedIndex(widget.icons.length - 1);
             },
           ),
         ),
@@ -184,16 +180,12 @@ class MexanydIconButton extends StatelessWidget {
     if (data.length < 2) {
       throw Exception('Buttons length must be greater than 1');
     }
-
-    final first = data.first;
-    final last = data.last;
-
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
           child: IconButton(
-            icon: Icon(first.icon),
+            icon: Icon(data.first.icon),
             iconSize: size,
             style: ButtonStyle(
               shape: MaterialStateProperty.all(
@@ -205,10 +197,10 @@ class MexanydIconButton extends StatelessWidget {
                 ),
               ),
               backgroundColor: MaterialStateProperty.all(
-                  _backgroundColor(first.backgroundColor, context)),
+                  _backgroundColor(data.first.backgroundColor, context)),
             ),
-            color: _foregroundColor(first.foregroundColor, context),
-            onPressed: first.onPressed,
+            color: _foregroundColor(data.first.foregroundColor, context),
+            onPressed: data.first.onPressed,
           ),
         ),
         ...data.sublist(1, data.length - 1).map((d) {
@@ -229,7 +221,7 @@ class MexanydIconButton extends StatelessWidget {
         }),
         Expanded(
           child: IconButton(
-            icon: Icon(last.icon),
+            icon: Icon(data.last.icon),
             iconSize: size,
             style: ButtonStyle(
               shape: MaterialStateProperty.all(
@@ -241,10 +233,10 @@ class MexanydIconButton extends StatelessWidget {
                 ),
               ),
               backgroundColor: MaterialStateProperty.all(
-                  _backgroundColor(last.backgroundColor, context)),
+                  _backgroundColor(data.last.backgroundColor, context)),
             ),
-            color: _foregroundColor(last.foregroundColor, context),
-            onPressed: last.onPressed,
+            color: _foregroundColor(data.last.foregroundColor, context),
+            onPressed: data.last.onPressed,
           ),
         ),
       ],
