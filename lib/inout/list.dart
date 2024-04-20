@@ -194,7 +194,7 @@ class _InOutListState extends State<InOutListPage> {
                         Theme.of(context).colorScheme.primary,
                       ),
                       foregroundColor: MaterialStateProperty.all(
-                        Theme.of(context).colorScheme.background,
+                        Theme.of(context).colorScheme.onPrimary,
                       ),
                     ),
                   ),
