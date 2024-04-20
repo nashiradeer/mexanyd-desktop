@@ -143,8 +143,17 @@ class _InOutListState extends State<InOutList> {
   }
 
   Widget _buildLoading() {
-    return const Center(
-      child: CircularProgressIndicator(),
+    return const Expanded(
+      child: Center(
+        child: SizedBox.square(
+          dimension: 80,
+          child: CircularProgressIndicator(
+            strokeWidth: 15,
+            strokeCap: StrokeCap.round,
+            strokeAlign: -1,
+          ),
+        ),
+      ),
     );
   }
 
