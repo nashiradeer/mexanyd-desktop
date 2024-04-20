@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mexanyd_desktop/inout/base.dart';
+import 'package:mexanyd_desktop/inout/print.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
 class InOutListPage extends StatefulWidget {
@@ -183,7 +183,19 @@ class _InOutListState extends State<InOutListPage> {
                   IconButton(
                     icon: const Icon(Icons.print_rounded),
                     iconSize: 40,
-                    onPressed: null,
+                    onPressed: () {
+                      if (_yearError || _monthError || _dayError) {
+                        return;
+                      }
+
+                      final year = _inOutController.year;
+                      final month = _inOutController.month;
+
+                      if (_dayController.text.isNotEmpty) {
+                        final day = _inOutController.day;
+                        printDayInOut(year, month, day!);
+                      }
+                    },
                     style: ButtonStyle(
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
