@@ -9,6 +9,7 @@
         "prefs",
         "sqflite",
         "strftime",
+        "unfocus",
         "unmaximize"
     ]
 }
