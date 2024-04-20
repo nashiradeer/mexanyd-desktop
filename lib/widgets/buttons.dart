@@ -178,7 +178,7 @@ class MexanydIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (data.length < 2) {
-      throw Exception('Buttons length must be greater than 1');
+      throw Exception('Needs at least 2 icons to work properly');
     }
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
