@@ -5,6 +5,7 @@
         "fullscreen",
         "inout",
         "localtime",
+        "LTRB",
         "mexanyd",
         "prefs",
         "sqflite",
