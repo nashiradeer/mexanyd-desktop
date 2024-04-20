@@ -194,6 +194,8 @@ class _InOutListState extends State<InOutListPage> {
                       if (_dayController.text.isNotEmpty) {
                         final day = _inOutController.day;
                         printDayInOut(year, month, day!);
+                      } else {
+                        printMonthInOut(year, month);
                       }
                     },
                     style: ButtonStyle(
