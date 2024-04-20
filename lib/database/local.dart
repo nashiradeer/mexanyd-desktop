@@ -99,6 +99,32 @@ class LocalDatabase extends IDatabase {
   }
 
   @override
+  Future<InOutStats> statsInOut(int year, int month, {int? day}) {
+    final yearStr = year.toString().padLeft(4, '0');
+    final monthStr = month.toString().padLeft(2, '0');
+    final dayStr = day?.toString().padLeft(2, '0');
+
+    var where = "strftime('%Y-%m', creation, 'localtime') = ?";
+    var whereArgs = ["$yearStr-$monthStr"];
+    if (dayStr != null) {
+      where = "strftime('%Y-%m-%d', creation, 'localtime') = ?";
+      whereArgs = ["$yearStr-$monthStr-$dayStr"];
+    }
+
+    return _database
+        .query(
+          "in_out",
+          columns: ["COUNT(*)", "SUM(value)"],
+          where: where,
+          whereArgs: whereArgs,
+        )
+        .then((rows) => InOutStats(
+              rows.first.values.first as int,
+              (rows.first.values.last ?? 0.0) as double,
+            ));
+  }
+
+  @override
   Future<int> countInOut(int year, int month, [int? day]) {
     final yearStr = year.toString().padLeft(4, '0');
     final monthStr = month.toString().padLeft(2, '0');
@@ -122,7 +148,7 @@ class LocalDatabase extends IDatabase {
   }
 
   @override
-  Future<double> totalInOut(int year, int month, [int? day]) {
+  Future<double> totalInOut(int year, int month, {int? day, InOutType? type}) {
     final yearStr = year.toString().padLeft(4, '0');
     final monthStr = month.toString().padLeft(2, '0');
     final dayStr = day?.toString().padLeft(2, '0');
@@ -130,8 +156,16 @@ class LocalDatabase extends IDatabase {
     var where = "strftime('%Y-%m', creation, 'localtime') = ?";
     var whereArgs = ["$yearStr-$monthStr"];
     if (dayStr != null) {
-      where = "strftime('%Y-%m-%d', creation, 'localtime') = ?";
-      whereArgs = ["$yearStr-$monthStr-$dayStr"];
+      if (type != null) {
+        where = "strftime('%Y-%m-%d', creation, 'localtime') = ? AND type = ?";
+        whereArgs = ["$yearStr-$monthStr-$dayStr", type.value.toString()];
+      } else {
+        where = "strftime('%Y-%m-%d', creation, 'localtime') = ?";
+        whereArgs = ["$yearStr-$monthStr-$dayStr"];
+      }
+    } else if (type != null) {
+      where = "strftime('%Y-%m', creation, 'localtime') = ? AND type = ?";
+      whereArgs = ["$yearStr-$monthStr", type.value.toString()];
     }
 
     return _database
@@ -142,5 +176,46 @@ class LocalDatabase extends IDatabase {
           whereArgs: whereArgs,
         )
         .then((rows) => (rows.first.values.first ?? 0.0) as double);
+  }
+
+  @override
+  Future<Map<int, InOutDayTotal>> totalInOutByDay(int year, int month) {
+    final yearStr = year.toString().padLeft(4, '0');
+    final monthStr = month.toString().padLeft(2, '0');
+
+    return _database
+        .query(
+          "in_out",
+          columns: [
+            "strftime('%d', creation, 'localtime') AS day",
+            "SUM(value) AS total",
+            "SUM(CASE WHEN type = 0 THEN value ELSE 0 END) AS money",
+            "SUM(CASE WHEN type = 1 THEN value ELSE 0 END) AS credit",
+            "SUM(CASE WHEN type = 2 THEN value ELSE 0 END) AS future",
+          ],
+          where: "strftime('%Y-%m', creation, 'localtime') = ?",
+          whereArgs: ["$yearStr-$monthStr"],
+          groupBy: "day",
+        )
+        .then((rows) => rows.fold<Map<int, InOutDayTotal>>({}, (map, item) {
+              final day = int.parse(item['day'] as String);
+              map[day] = InOutDayTotal(
+                _getDouble(item['total']),
+                _getDouble(item['money']),
+                _getDouble(item['credit']),
+                _getDouble(item['future']),
+              );
+              return map;
+            }));
+  }
+
+  double _getDouble(dynamic value) {
+    if (value is int) {
+      return value.toDouble();
+    } else if (value is double) {
+      return value;
+    } else {
+      throw ArgumentError('Invalid value: $value');
+    }
   }
 }

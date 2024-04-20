@@ -18,11 +18,33 @@ abstract class IDatabase {
     bool reversed = false,
   });
 
+  /// Gets the statistics of in/outs.
+  Future<InOutStats> statsInOut(int year, int month, {int? day});
+
   /// Gets the total count of in/outs.
   Future<int> countInOut(int year, int month, [int? day]);
 
   /// Gets the total value of in/outs.
-  Future<double> totalInOut(int year, int month, [int? day]);
+  Future<double> totalInOut(int year, int month, {int? day, InOutType? type});
+
+  /// Gets the total value of in/outs by day.
+  Future<Map<int, InOutDayTotal>> totalInOutByDay(int year, int month);
+}
+
+class InOutStats {
+  final int count;
+  final double total;
+
+  const InOutStats(this.count, this.total);
+}
+
+class InOutDayTotal {
+  final double total;
+  final double money;
+  final double credit;
+  final double future;
+
+  const InOutDayTotal(this.total, this.money, this.credit, this.future);
 }
 
 enum InOutType {
