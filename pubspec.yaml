@@ -16,6 +16,7 @@ dependencies:
   sqflite_common_ffi: ^2.3.3
   window_manager: ^0.3.8
   shared_preferences: ^2.2.3
+  pdf: ^3.10.8
 dev_dependencies:
   flutter_test:
     sdk: flutter
