@@ -186,7 +186,6 @@ void printMonthInOut(int year, int month) async {
                             .fold(0.0, (prev, element) => prev + element.money)
                             .toStringAsFixed(2),
                         textAlign: pw.TextAlign.right,
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                     ),
                     pw.Padding(
@@ -196,7 +195,6 @@ void printMonthInOut(int year, int month) async {
                             .fold(0.0, (prev, element) => prev + element.credit)
                             .toStringAsFixed(2),
                         textAlign: pw.TextAlign.right,
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                     ),
                     pw.Padding(
@@ -206,7 +204,6 @@ void printMonthInOut(int year, int month) async {
                             .fold(0.0, (prev, element) => prev + element.future)
                             .toStringAsFixed(2),
                         textAlign: pw.TextAlign.right,
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                     ),
                     pw.Padding(
@@ -216,7 +213,6 @@ void printMonthInOut(int year, int month) async {
                             .fold(0.0, (prev, element) => prev + element.total)
                             .toStringAsFixed(2),
                         textAlign: pw.TextAlign.right,
-                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
                     ),
                   ],
