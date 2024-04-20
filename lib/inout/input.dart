@@ -18,6 +18,7 @@ class _InOutInputState extends State<InOutInputPage> {
   final InOutController _inOutController = InOutController.fromDateTimeNow();
   final MexanydRadioController _mexanydRadioController =
       MexanydRadioController();
+  final _valueFocus = FocusNode();
   bool _error = false;
 
   @override
@@ -64,6 +65,7 @@ class _InOutInputState extends State<InOutInputPage> {
                     width: 100,
                     child: TextField(
                       controller: _valueController,
+                      focusNode: _valueFocus,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(RegExp(r'[0-9\.,]')),
                         FilteringTextInputFormatter.deny(RegExp(r','),
@@ -76,7 +78,6 @@ class _InOutInputState extends State<InOutInputPage> {
                         decimal: true,
                         signed: true,
                       ),
-                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         labelText: "Valor",
                         counterText: "",
@@ -85,6 +86,20 @@ class _InOutInputState extends State<InOutInputPage> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
+                      onEditingComplete: () {
+                        FocusScope.of(context).nextFocus();
+
+                        var value = double.tryParse(_valueController.text);
+                        _error = value == null || value > 99999.99;
+                        setState(() {});
+                      },
+                      onTapOutside: (_) {
+                        FocusScope.of(context).unfocus();
+
+                        var value = double.tryParse(_valueController.text);
+                        _error = value == null || value > 99999.99;
+                        setState(() {});
+                      },
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -115,6 +130,7 @@ class _InOutInputState extends State<InOutInputPage> {
                           foregroundColor: Colors.white,
                           onPressed: () {
                             _save();
+                            FocusScope.of(context).requestFocus(_valueFocus);
                           },
                         ),
                         MexanydIconButtonData(
@@ -123,6 +139,7 @@ class _InOutInputState extends State<InOutInputPage> {
                           foregroundColor: Colors.white,
                           onPressed: () {
                             _save(invert: true);
+                            FocusScope.of(context).requestFocus(_valueFocus);
                           },
                         ),
                       ],
