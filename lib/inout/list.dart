@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mexanyd_desktop/inout/base.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
@@ -14,7 +15,8 @@ class _InOutListState extends State<InOutListPage> {
   final TextEditingController _yearController = TextEditingController();
   final TextEditingController _monthController = TextEditingController();
   final TextEditingController _dayController = TextEditingController();
-  final InOutController _inOutController = InOutController.fromDateTimeNow();
+  final InOutController _inOutController =
+      InOutController.fromDateTimeMonthNow();
 
   bool _yearError = false;
   bool _monthError = false;
@@ -24,9 +26,8 @@ class _InOutListState extends State<InOutListPage> {
   Widget build(BuildContext context) {
     _yearController.text = _inOutController.year.toString().padLeft(4, "0");
     _monthController.text = _inOutController.month.toString().padLeft(2, "0");
-    _dayController.text = _inOutController.day.toString().padLeft(2, "0");
-
-    _fetch();
+    _dayController.text =
+        _inOutController.day?.toString().padLeft(2, "0") ?? "";
 
     return MexanydPage(
       title: "Listar",
@@ -53,120 +54,151 @@ class _InOutListState extends State<InOutListPage> {
           child: Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: 110,
-                    child: TextField(
-                      maxLength: 4,
-                      maxLines: 1,
-                      controller: _yearController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                      ],
-                      textAlign: TextAlign.center,
-                      keyboardType: const TextInputType.numberWithOptions(),
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        labelText: "Ano",
-                        counterText: "",
-                        errorText: _yearError ? "Inválido" : null,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(width: 70),
+                      SizedBox(
+                        width: 110,
+                        child: TextField(
+                          maxLength: 4,
+                          maxLines: 1,
+                          controller: _yearController,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          textAlign: TextAlign.center,
+                          keyboardType: const TextInputType.numberWithOptions(),
+                          decoration: InputDecoration(
+                            labelText: "Ano",
+                            counterText: "",
+                            errorText: _yearError ? "Inválido" : null,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onEditingComplete: () {
+                            FocusScope.of(context).nextFocus();
+                            _yearController.text =
+                                _yearController.text.padLeft(4, "0");
+                            _fetch();
+                          },
+                          onTapOutside: (_) {
+                            FocusScope.of(context).unfocus();
+                            _yearController.text =
+                                _yearController.text.padLeft(4, "0");
+                            _fetch();
+                          },
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  SizedBox(
-                    width: 110,
-                    child: TextField(
-                      maxLength: 2,
-                      maxLines: 1,
-                      controller: _monthController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                      ],
-                      textAlign: TextAlign.center,
-                      keyboardType: const TextInputType.numberWithOptions(),
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        labelText: "Mês",
-                        counterText: "",
-                        errorText: _monthError ? "Inválido" : null,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        width: 110,
+                        child: TextField(
+                          maxLength: 2,
+                          maxLines: 1,
+                          controller: _monthController,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          textAlign: TextAlign.center,
+                          keyboardType: const TextInputType.numberWithOptions(),
+                          decoration: InputDecoration(
+                            labelText: "Mês",
+                            counterText: "",
+                            errorText: _monthError ? "Inválido" : null,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onEditingComplete: () {
+                            if (_dayController.text.isEmpty) {
+                              FocusScope.of(context).unfocus();
+                            } else {
+                              FocusScope.of(context).nextFocus();
+                            }
+
+                            _monthController.text =
+                                _monthController.text.padLeft(2, "0");
+                            _fetch();
+                          },
+                          onTapOutside: (_) {
+                            FocusScope.of(context).unfocus();
+                            _monthController.text =
+                                _monthController.text.padLeft(2, "0");
+                            _fetch();
+                          },
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  SizedBox(
-                    width: 110,
-                    child: TextField(
-                      maxLength: 2,
-                      maxLines: 1,
-                      controller: _dayController,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                      ],
-                      textAlign: TextAlign.center,
-                      keyboardType: const TextInputType.numberWithOptions(),
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        labelText: "Dia",
-                        counterText: "",
-                        errorText: _dayError ? "Inválido" : null,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
+                      const SizedBox(width: 10),
+                      SizedBox(
+                        width: 110,
+                        child: TextField(
+                          maxLength: 2,
+                          maxLines: 1,
+                          controller: _dayController,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          textAlign: TextAlign.center,
+                          keyboardType: const TextInputType.numberWithOptions(),
+                          textInputAction: TextInputAction.done,
+                          decoration: InputDecoration(
+                            labelText: "Dia",
+                            counterText: "",
+                            errorText: _dayError ? "Inválido" : null,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          onEditingComplete: () {
+                            FocusScope.of(context).unfocus();
+
+                            if (_dayController.text.isNotEmpty) {
+                              _dayController.text =
+                                  _dayController.text.padLeft(2, "0");
+                            }
+
+                            _fetch();
+                          },
+                          onTapOutside: (e) {
+                            FocusScope.of(context).unfocus();
+
+                            if (_dayController.text.isNotEmpty) {
+                              _dayController.text =
+                                  _dayController.text.padLeft(2, "0");
+                            }
+
+                            _fetch();
+                          },
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.green),
-                  ),
-                  onPressed: _fetch,
-                  child: const Text("Buscar",
-                      style: TextStyle(color: Colors.white, fontSize: 20)),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue),
-                        minimumSize:
-                            MaterialStateProperty.all(const Size(0, 60)),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.print_rounded),
+                    iconSize: 40,
+                    onPressed: null,
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                      onPressed: () {},
-                      child: const Text("Imprimir",
-                          style: TextStyle(color: Colors.white, fontSize: 20)),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.blue),
-                        minimumSize:
-                            MaterialStateProperty.all(const Size(0, 60)),
+                      backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).colorScheme.primary,
                       ),
-                      onPressed: () {},
-                      child: const Text("Exportar",
-                          style: TextStyle(color: Colors.white, fontSize: 20)),
+                      foregroundColor: MaterialStateProperty.all(
+                        Theme.of(context).colorScheme.background,
+                      ),
                     ),
                   ),
+                  const SizedBox(width: 20),
                 ],
               ),
               const SizedBox(height: 10),
@@ -178,56 +210,27 @@ class _InOutListState extends State<InOutListPage> {
     );
   }
 
-  String _stringOrDefault(String value, String defaultValue) {
-    return value.isEmpty ? defaultValue : value;
-  }
-
   void _fetch() {
-    final today = DateTime.now();
+    final year = int.tryParse(_yearController.text);
+    _yearError = year == null || year < 0 || year > 9999;
 
-    final year = int.tryParse(
-        _stringOrDefault(_yearController.text, today.year.toString()));
-    final month = int.tryParse(
-        _stringOrDefault(_monthController.text, today.month.toString()));
-    final day = int.tryParse(
-        _stringOrDefault(_dayController.text, today.day.toString()));
+    final month = int.tryParse(_monthController.text);
+    _monthError = month == null || month < 1 || month > 12;
 
-    if (year == null) {
-      setState(() {
-        _yearError = true;
-      });
-
-      return;
+    int? day;
+    if (_dayController.text.isNotEmpty) {
+      day = int.tryParse(_dayController.text);
+      _dayError = day == null || day < 1 || day > 31;
     } else {
-      setState(() {
-        _yearError = false;
-      });
+      _dayError = false;
     }
 
-    if (month == null || month < 1 || month > 12) {
-      setState(() {
-        _monthError = true;
-      });
+    setState(() {});
 
+    if (_yearError || _monthError || _dayError) {
       return;
-    } else {
-      setState(() {
-        _monthError = false;
-      });
     }
 
-    if (day == null || day < 1 || day > 31) {
-      setState(() {
-        _dayError = true;
-      });
-
-      return;
-    } else {
-      setState(() {
-        _dayError = false;
-      });
-    }
-
-    _inOutController.fetch(year, month, day);
+    _inOutController.fetch(year!, month!, day);
   }
 }
