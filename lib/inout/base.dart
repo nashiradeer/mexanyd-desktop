@@ -104,16 +104,15 @@ class _InOutListState extends State<InOutList> {
     final month = widget.controller.month;
     final day = widget.controller.day;
 
-    final dataSize = await globalDatabase.countInOut(year, month, day);
-    final pageCount = (dataSize / widget.itemPerPage).ceil();
+    final stats = await globalDatabase.statsInOut(year, month, day: day);
+    final pageCount = (stats.count / widget.itemPerPage).ceil();
     final data = await globalDatabase.listInOut(year, month,
         day: day,
         limit: widget.itemPerPage,
         offset: page * widget.itemPerPage,
         reversed: widget.reversed);
-    final totalValue = await globalDatabase.totalInOut(year, month, day);
 
-    return _InOutData(data, pageCount, totalValue);
+    return _InOutData(data, pageCount, stats.total);
   }
 
   @override
