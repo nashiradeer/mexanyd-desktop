@@ -6,10 +6,11 @@
 
 ## Operation systems
 
-| OS         | Version | Arch   | Supported          |
-| ---------- | ------- | ------ | ------------------ |
-| Windows 11 | 23H2    | x86_64 | :white_check_mark: |
-| Windows 10 | 22H2    | x86_64 | :white_check_mark: |
+| OS           | Version | Arch   | Supported          |
+| ------------ | ------- | ------ | ------------------ |
+| Windows 11   | 23H2    | x86_64 | :white_check_mark: |
+| Windows 10   | 22H2    | x86_64 | :white_check_mark: |
+| Ubuntu Linux | 22.04   | x86_64 | :white_check_mark: |
 
 ## Reporting vulnerabilities
 
