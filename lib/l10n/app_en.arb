@@ -1,0 +1,45 @@
+{
+    "@@locale": "en",
+    "error": "Error",
+    "close": "Close",
+    "unknownError": "Unknown error",
+    "invalidDatabase": "Invalid database",
+    "invalidDatabaseVersion": "Invalid database version",
+    "noDataFound": "No data found",
+    "totalMoney": "$ {value}",
+    "@totalMoney": {
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "inOut": "In/Out",
+    "inNoOut": "In",
+    "out": "Out",
+    "list": "List",
+    "value": "Value",
+    "invalid": "Invalid",
+    "description": "Description",
+    "year": "Year",
+    "month": "Month",
+    "day": "Day",
+    "compactNumber": "N°",
+    "money": "Money",
+    "card": "Credit Card",
+    "future": "On Credit",
+    "total": "Total",
+    "time": "Time",
+    "type": "Type",
+    "page": "Page {current} of {total}",
+    "@page": {
+        "placeholders": {
+            "current": {
+                "type": "int"
+            },
+            "total": {
+                "type": "int"
+            }
+        }
+    }
+}
