@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/inout/base.dart';
 import 'package:mexanyd_desktop/widgets/buttons.dart';
@@ -24,18 +25,18 @@ class _InOutInputState extends State<InOutInputPage> {
   @override
   Widget build(BuildContext context) {
     return MexanydPage(
-      title: "Entrada/Saída",
+      title: AppLocalizations.of(context)!.inOut,
       icon: Icons.swap_vert_rounded,
       actions: [
-        const MexanydPageButton(
-          text1: "Entrada",
-          text2: "Saída",
+        MexanydPageButton(
+          text1: AppLocalizations.of(context)!.inNoOut,
+          text2: AppLocalizations.of(context)!.out,
           icon: Icons.swap_vert_rounded,
           onPressed: null,
         ),
         const SizedBox(height: 5),
         MexanydPageButton(
-          text1: "Listar",
+          text1: AppLocalizations.of(context)!.list,
           icon: Icons.list_alt_rounded,
           onPressed: () => Navigator.popAndPushNamed(context, "/inout/list"),
         ),
@@ -79,9 +80,11 @@ class _InOutInputState extends State<InOutInputPage> {
                         signed: true,
                       ),
                       decoration: InputDecoration(
-                        labelText: "Valor",
+                        labelText: AppLocalizations.of(context)!.value,
                         counterText: "",
-                        errorText: _error ? "Inválido" : null,
+                        errorText: _error
+                            ? AppLocalizations.of(context)!.invalid
+                            : null,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -109,7 +112,7 @@ class _InOutInputState extends State<InOutInputPage> {
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.done,
                       decoration: InputDecoration(
-                        labelText: "Descrição",
+                        labelText: AppLocalizations.of(context)!.description,
                         counterText: "",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),

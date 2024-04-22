@@ -1,26 +1,14 @@
 import 'dart:collection';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-class _InOutDayData {
-  final double total;
-  final double moneyTotal;
-  final double creditTotal;
-  final double futureTotal;
-
-  const _InOutDayData(
-    this.total,
-    this.moneyTotal,
-    this.creditTotal,
-    this.futureTotal,
-  );
-}
-
-void printMonthInOut(int year, int month) async {
+void printMonthInOut(int year, int month, BuildContext buildContext) async {
   final days =
       SplayTreeMap.from(await globalDatabase.totalInOutByDay(year, month));
   final daysCount = DateTime(year, month + 1, 0).day;
@@ -69,7 +57,7 @@ void printMonthInOut(int year, int month) async {
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(1),
                       child: pw.Text(
-                        'N°',
+                        AppLocalizations.of(buildContext)!.compactNumber,
                         textAlign: pw.TextAlign.center,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
@@ -77,7 +65,7 @@ void printMonthInOut(int year, int month) async {
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(1),
                       child: pw.Text(
-                        'Dia',
+                        AppLocalizations.of(buildContext)!.day,
                         textAlign: pw.TextAlign.center,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
@@ -85,7 +73,7 @@ void printMonthInOut(int year, int month) async {
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(1),
                       child: pw.Text(
-                        'Dinheiro',
+                        AppLocalizations.of(buildContext)!.money,
                         textAlign: pw.TextAlign.center,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
@@ -93,7 +81,7 @@ void printMonthInOut(int year, int month) async {
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(1),
                       child: pw.Text(
-                        'Cartão',
+                        AppLocalizations.of(buildContext)!.card,
                         textAlign: pw.TextAlign.center,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
@@ -101,7 +89,7 @@ void printMonthInOut(int year, int month) async {
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(1),
                       child: pw.Text(
-                        'Prazo',
+                        AppLocalizations.of(buildContext)!.future,
                         textAlign: pw.TextAlign.center,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
@@ -109,7 +97,7 @@ void printMonthInOut(int year, int month) async {
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(1),
                       child: pw.Text(
-                        'Total',
+                        AppLocalizations.of(buildContext)!.total,
                         textAlign: pw.TextAlign.center,
                         style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                       ),
@@ -232,7 +220,8 @@ void printMonthInOut(int year, int month) async {
   );
 }
 
-void printDayInOut(int year, int month, int day) async {
+void printDayInOut(
+    int year, int month, int day, BuildContext buildContext) async {
   const itemsPerPage = 40;
   final stats = await globalDatabase.statsInOut(year, month, day: day);
   final pageCount = stats.count ~/ itemsPerPage + 1;
@@ -283,7 +272,7 @@ void printDayInOut(int year, int month, int day) async {
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(1),
                         child: pw.Text(
-                          'Hora',
+                          AppLocalizations.of(buildContext)!.time,
                           textAlign: pw.TextAlign.center,
                           style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                         ),
@@ -291,7 +280,7 @@ void printDayInOut(int year, int month, int day) async {
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(1),
                         child: pw.Text(
-                          'Tipo',
+                          AppLocalizations.of(buildContext)!.type,
                           textAlign: pw.TextAlign.center,
                           style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                         ),
@@ -299,7 +288,7 @@ void printDayInOut(int year, int month, int day) async {
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(1),
                         child: pw.Text(
-                          'Descrição',
+                          AppLocalizations.of(buildContext)!.description,
                           textAlign: pw.TextAlign.center,
                           style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                         ),
@@ -307,7 +296,7 @@ void printDayInOut(int year, int month, int day) async {
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(1),
                         child: pw.Text(
-                          'Valor',
+                          AppLocalizations.of(buildContext)!.value,
                           textAlign: pw.TextAlign.center,
                           style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                         ),
@@ -327,7 +316,7 @@ void printDayInOut(int year, int month, int day) async {
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(1),
                           child: pw.Text(
-                            _typeToString(item.type),
+                            _typeToString(item.type, buildContext),
                             textAlign: pw.TextAlign.center,
                           ),
                         ),
@@ -353,7 +342,8 @@ void printDayInOut(int year, int month, int day) async {
                 width: double.infinity,
                 padding: const pw.EdgeInsets.only(top: 1, bottom: 1),
                 child: pw.Text(
-                  'R\$ ${stats.total.toStringAsFixed(2)}',
+                  AppLocalizations.of(buildContext)!
+                      .totalMoney(stats.total.toStringAsFixed(2)),
                   textAlign: pw.TextAlign.center,
                 ),
                 decoration: pw.BoxDecoration(
@@ -363,8 +353,10 @@ void printDayInOut(int year, int month, int day) async {
               ),
               pw.SizedBox(
                 width: double.infinity,
-                child: pw.Text('Página ${i + 1} de $pageCount',
-                    textAlign: pw.TextAlign.right),
+                child: pw.Text(
+                  AppLocalizations.of(buildContext)!.page(i + 1, pageCount),
+                  textAlign: pw.TextAlign.right,
+                ),
               ),
             ],
           );
@@ -380,13 +372,13 @@ void printDayInOut(int year, int month, int day) async {
   );
 }
 
-String _typeToString(InOutType type) {
+String _typeToString(InOutType type, BuildContext context) {
   switch (type) {
     case InOutType.money:
-      return 'Dinheiro';
+      return AppLocalizations.of(context)!.money;
     case InOutType.credit:
-      return 'Cartão';
+      return AppLocalizations.of(context)!.card;
     case InOutType.future:
-      return 'Prazo';
+      return AppLocalizations.of(context)!.future;
   }
 }

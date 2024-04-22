@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 
@@ -162,9 +163,9 @@ class _InOutListState extends State<InOutList> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(Icons.error, size: 100, color: Colors.red),
-          const Text(
-            "Error",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          Text(
+            AppLocalizations.of(context)!.error,
+            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           Text(message),
           const SizedBox(height: 50),
@@ -174,11 +175,11 @@ class _InOutListState extends State<InOutList> {
   }
 
   Widget _buildEmpty() {
-    return const Expanded(
+    return Expanded(
       child: Center(
         child: Text(
-          "Nenhum dado encontrado",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          AppLocalizations.of(context)!.noDataFound,
+          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -209,7 +210,8 @@ class _InOutListState extends State<InOutList> {
     return Row(
       children: [
         Text(
-          "R\$ ${totalValue.toStringAsFixed(2)}",
+          AppLocalizations.of(context)!
+              .totalMoney(totalValue.toStringAsFixed(2)),
           style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
         ),
         const Spacer(),
@@ -255,7 +257,8 @@ class _InOutItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "R\$ ${inOut.value.toStringAsFixed(2)}",
+                  AppLocalizations.of(context)!
+                      .totalMoney(inOut.value.toStringAsFixed(2)),
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mexanyd_desktop/inout/base.dart';
 import 'package:mexanyd_desktop/inout/print.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
@@ -30,18 +31,18 @@ class _InOutListState extends State<InOutListPage> {
         _inOutController.day?.toString().padLeft(2, "0") ?? "";
 
     return MexanydPage(
-      title: "Listar",
+      title: AppLocalizations.of(context)!.list,
       icon: Icons.list_alt_rounded,
       actions: [
         MexanydPageButton(
-          text1: "Entrada",
-          text2: "Saída",
+          text1: AppLocalizations.of(context)!.inNoOut,
+          text2: AppLocalizations.of(context)!.out,
           icon: Icons.swap_vert_rounded,
           onPressed: () => Navigator.popAndPushNamed(context, "/inout"),
         ),
         const SizedBox(height: 5),
-        const MexanydPageButton(
-          text1: "Listar",
+        MexanydPageButton(
+          text1: AppLocalizations.of(context)!.list,
           icon: Icons.list_alt_rounded,
           onPressed: null,
         ),
@@ -74,9 +75,11 @@ class _InOutListState extends State<InOutListPage> {
                           textAlign: TextAlign.center,
                           keyboardType: const TextInputType.numberWithOptions(),
                           decoration: InputDecoration(
-                            labelText: "Ano",
+                            labelText: AppLocalizations.of(context)!.year,
                             counterText: "",
-                            errorText: _yearError ? "Inválido" : null,
+                            errorText: _yearError
+                                ? AppLocalizations.of(context)!.invalid
+                                : null,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
@@ -108,9 +111,11 @@ class _InOutListState extends State<InOutListPage> {
                           textAlign: TextAlign.center,
                           keyboardType: const TextInputType.numberWithOptions(),
                           decoration: InputDecoration(
-                            labelText: "Mês",
+                            labelText: AppLocalizations.of(context)!.month,
                             counterText: "",
-                            errorText: _monthError ? "Inválido" : null,
+                            errorText: _monthError
+                                ? AppLocalizations.of(context)!.invalid
+                                : null,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
@@ -148,9 +153,11 @@ class _InOutListState extends State<InOutListPage> {
                           keyboardType: const TextInputType.numberWithOptions(),
                           textInputAction: TextInputAction.done,
                           decoration: InputDecoration(
-                            labelText: "Dia",
+                            labelText: AppLocalizations.of(context)!.day,
                             counterText: "",
-                            errorText: _dayError ? "Inválido" : null,
+                            errorText: _dayError
+                                ? AppLocalizations.of(context)!.invalid
+                                : null,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
@@ -193,9 +200,9 @@ class _InOutListState extends State<InOutListPage> {
 
                       if (_dayController.text.isNotEmpty) {
                         final day = _inOutController.day;
-                        printDayInOut(year, month, day!);
+                        printDayInOut(year, month, day!, context);
                       } else {
-                        printMonthInOut(year, month);
+                        printMonthInOut(year, month, context);
                       }
                     },
                     style: ButtonStyle(
