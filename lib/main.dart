@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/intl_standalone.dart';
@@ -15,7 +15,7 @@ import 'package:mexanyd_desktop/widgets/page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
-late final AppController appController;
+late AppController appController;
 
 void main() async {
   final prefs = await SharedPreferences.getInstance();
@@ -53,7 +53,7 @@ void main() async {
       prefs.setString("theme", "system");
   }
 
-  String? error;
+  int? error;
   final database = prefs.getString("database") ?? "local";
   if (database == "local") {
     prefs.setString("database", "local");
@@ -64,10 +64,10 @@ void main() async {
       prefs.setInt("database_version", LocalDatabase.version);
       globalDatabase = await LocalDatabase.open();
     } else {
-      error = "Versão do banco de dados inválida";
+      error = 0;
     }
   } else {
-    error = "Banco de dados inválido";
+    error = 1;
   }
 
   final parsedLocale = intl_locale.Locale.tryParse(locale);
@@ -86,28 +86,56 @@ void main() async {
 class AppController extends ChangeNotifier {
   ThemeMode? _theme;
   Locale? _locale;
-  String? _error;
+  int? _error;
 
   ThemeMode? get theme => _theme;
   Locale? get locale => _locale;
-  String? get error => _error;
+  int? get error => _error;
 
-  AppController({ThemeMode? theme, Locale? locale, String? error})
+  AppController({ThemeMode? theme, Locale? locale, int? error})
       : _theme = theme,
         _locale = locale,
         _error = error;
 
   void setTheme(ThemeMode? theme) {
     _theme = theme;
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setString("theme", _themeToString(theme));
+    });
     notifyListeners();
+  }
+
+  String _themeToString(ThemeMode? theme) {
+    switch (theme) {
+      case ThemeMode.dark:
+        return "dark";
+      case ThemeMode.light:
+        return "light";
+      default:
+        return "system";
+    }
   }
 
   void setLocale(Locale? locale) {
     _locale = locale;
+
+    if (locale != null) {
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.setString(
+            "locale", "${locale.languageCode}_${locale.countryCode}");
+      });
+
+      initializeDateFormatting("${locale.languageCode}_${locale.countryCode}");
+    } else {
+      SharedPreferences.getInstance().then((prefs) {
+        prefs.remove("locale");
+      });
+    }
+
     notifyListeners();
   }
 
-  void setError(String? error) {
+  void setError(int? error) {
     _error = error;
     notifyListeners();
   }
@@ -144,16 +172,9 @@ class _AppState extends State<App> {
       onGenerateRoute: (widget.controller._error == null) ? _pageRoute : null,
       home: (widget.controller._error == null)
           ? null
-          : _errorPage(context, widget.controller._error!),
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('pt'),
-        Locale('en'),
-      ],
+          : ErrorPage(widget.controller._error!),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       locale: widget.controller._locale,
     );
   }
@@ -174,11 +195,18 @@ class _AppState extends State<App> {
       reverseTransitionDuration: Duration.zero,
     );
   }
+}
 
-  Widget _errorPage(BuildContext context, String message) {
+class ErrorPage extends StatelessWidget {
+  final int code;
+
+  const ErrorPage(this.code, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return MexanydPage(
       icon: Icons.error,
-      title: 'Erro',
+      title: AppLocalizations.of(context)!.error,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -186,10 +214,10 @@ class _AppState extends State<App> {
             const Icon(Icons.error, size: 128, color: Colors.red),
             const SizedBox(height: 10),
             Text(
-              message,
+              _errorMessage(code, context),
               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 80),
+            const SizedBox(height: 40),
             TextButton(
               onPressed: () => exit(1),
               style: ButtonStyle(
@@ -198,11 +226,25 @@ class _AppState extends State<App> {
                     Theme.of(context).colorScheme.onPrimary),
                 fixedSize: MaterialStateProperty.all(const Size(200, 55)),
               ),
-              child: const Text('Fechar', style: TextStyle(fontSize: 22)),
+              child: Text(
+                AppLocalizations.of(context)!.close,
+                style: const TextStyle(fontSize: 22),
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  String _errorMessage(int code, BuildContext context) {
+    switch (code) {
+      case 0:
+        return AppLocalizations.of(context)!.invalidDatabaseVersion;
+      case 1:
+        return AppLocalizations.of(context)!.invalidDatabase;
+      default:
+        return AppLocalizations.of(context)!.unknownError;
+    }
   }
 }
