@@ -1,21 +1,23 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/intl_standalone.dart';
+import 'package:intl/locale.dart' as intl_locale;
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/database/local.dart';
 import 'package:mexanyd_desktop/inout/input.dart';
 import 'package:mexanyd_desktop/inout/list.dart';
 import 'package:mexanyd_desktop/theme.dart';
+import 'package:mexanyd_desktop/widgets/page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
-void main() async {
-  await findSystemLocale();
-  initializeDateFormatting(Intl.systemLocale);
+late final AppController appController;
 
+void main() async {
   final prefs = await SharedPreferences.getInstance();
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +36,11 @@ void main() async {
     await windowManager.focus();
   });
 
+  final locale = prefs.getString("locale") ?? await findSystemLocale();
+  Intl.defaultLocale = locale;
+  await initializeDateFormatting(locale);
+  prefs.setString("locale", locale);
+
   var theme = ThemeMode.system;
   switch (prefs.getString("theme")) {
     case "dark":
@@ -46,9 +53,8 @@ void main() async {
       prefs.setString("theme", "system");
   }
 
-  final database = prefs.getString("database") ?? "local";
-
   String? error;
+  final database = prefs.getString("database") ?? "local";
   if (database == "local") {
     prefs.setString("database", "local");
     final databaseVersion =
@@ -64,23 +70,91 @@ void main() async {
     error = "Banco de dados inválido";
   }
 
-  runApp(MainApp(theme, error: error));
+  final parsedLocale = intl_locale.Locale.tryParse(locale);
+
+  appController = AppController(
+    theme: theme,
+    locale: parsedLocale != null
+        ? Locale(parsedLocale.languageCode, parsedLocale.countryCode)
+        : null,
+    error: error,
+  );
+
+  runApp(App(appController));
 }
 
-class MainApp extends StatelessWidget {
-  final ThemeMode theme;
-  final String? error;
+class AppController extends ChangeNotifier {
+  ThemeMode? _theme;
+  Locale? _locale;
+  String? _error;
 
-  const MainApp(this.theme, {super.key, this.error});
+  ThemeMode? get theme => _theme;
+  Locale? get locale => _locale;
+  String? get error => _error;
+
+  AppController({ThemeMode? theme, Locale? locale, String? error})
+      : _theme = theme,
+        _locale = locale,
+        _error = error;
+
+  void setTheme(ThemeMode? theme) {
+    _theme = theme;
+    notifyListeners();
+  }
+
+  void setLocale(Locale? locale) {
+    _locale = locale;
+    notifyListeners();
+  }
+
+  void setError(String? error) {
+    _error = error;
+    notifyListeners();
+  }
+}
+
+class App extends StatefulWidget {
+  final AppController controller;
+
+  const App(this.controller, {super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    widget.controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       darkTheme: darkTheme(),
       theme: lightTheme(),
-      themeMode: theme,
-      onGenerateRoute: (error == null) ? _pageRoute : null,
-      home: (error == null) ? null : _errorPage(context, error!),
+      themeMode: widget.controller._theme ?? ThemeMode.system,
+      onGenerateRoute: (widget.controller._error == null) ? _pageRoute : null,
+      home: (widget.controller._error == null)
+          ? null
+          : _errorPage(context, widget.controller._error!),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('pt'),
+        Locale('en'),
+      ],
+      locale: widget.controller._locale,
     );
   }
 
@@ -102,7 +176,9 @@ class MainApp extends StatelessWidget {
   }
 
   Widget _errorPage(BuildContext context, String message) {
-    return Material(
+    return MexanydPage(
+      icon: Icons.error,
+      title: 'Erro',
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
