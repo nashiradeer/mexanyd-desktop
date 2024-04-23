@@ -24,7 +24,7 @@
     "year": "Year",
     "month": "Month",
     "day": "Day",
-    "compactNumber": "N°",
+    "compactNumber": "N",
     "money": "Money",
     "card": "Credit Card",
     "future": "On Credit",
