@@ -17,6 +17,7 @@
     "year": "Ano",
     "month": "Mês",
     "day": "Dia",
+    "compactNumber": "N",
     "money": "Dinheiro",
     "card": "Cartão",
     "future": "Prazo",
