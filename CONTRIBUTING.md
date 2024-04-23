@@ -32,7 +32,7 @@ Commit scopes describe what has been affected by the commit, below is a list of 
 
 *There are no commit scopes on this project for now.*
 
-If your commit is of type `i18n` you will use the file name without the extension (`pt-BR.json` becomes `pt-BR`) as the scope.
+If your commit is of type `i18n` you will use the file name without the extension and prefix (`app_pt.arb` becomes `pt`) as the scope.
 
 You can omit the scope (example `feat: create new module for ...`) if your commit there's no scope documented or is from other types that don't `feat`, `fix`, `i18n` and `refactor`.
 
