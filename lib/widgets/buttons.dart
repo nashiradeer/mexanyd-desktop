@@ -20,6 +20,7 @@ class MexanydIconRadio extends StatefulWidget {
   final double borderRadius;
   final Color? selectedColor;
   final Color? unselectedColor;
+  final Function(int)? onChanged;
 
   const MexanydIconRadio({
     super.key,
@@ -29,6 +30,7 @@ class MexanydIconRadio extends StatefulWidget {
     this.borderRadius = 10,
     this.selectedColor,
     this.unselectedColor,
+    this.onChanged,
   });
 
   @override
@@ -92,6 +94,9 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
             color: _foregroundColor(0, context),
             onPressed: () {
               widget.controller.setSelectedIndex(0);
+              if (widget.onChanged != null) {
+                widget.onChanged!(0);
+              }
             },
           ),
         ),
@@ -110,6 +115,9 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
               color: _foregroundColor(index, context),
               onPressed: () {
                 widget.controller.setSelectedIndex(index);
+                if (widget.onChanged != null) {
+                  widget.onChanged!(index);
+                }
               },
             ),
           );
@@ -133,6 +141,9 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
             color: _foregroundColor(widget.icons.length - 1, context),
             onPressed: () {
               widget.controller.setSelectedIndex(widget.icons.length - 1);
+              if (widget.onChanged != null) {
+                widget.onChanged!(widget.icons.length - 1);
+              }
             },
           ),
         ),

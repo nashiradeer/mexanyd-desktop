@@ -41,5 +41,7 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "config": "Config.",
+    "fullConfig": "Configuration"
 }

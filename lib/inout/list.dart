@@ -46,6 +46,12 @@ class _InOutListState extends State<InOutListPage> {
           icon: Icons.list_alt_rounded,
           onPressed: null,
         ),
+        const Spacer(),
+        MexanydPageButton(
+          text1: AppLocalizations.of(context)!.config,
+          icon: Icons.settings_rounded,
+          onPressed: () => Navigator.popAndPushNamed(context, "/config"),
+        ),
       ],
       child: Center(
         child: Container(

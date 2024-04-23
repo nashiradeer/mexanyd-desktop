@@ -40,6 +40,12 @@ class _InOutInputState extends State<InOutInputPage> {
           icon: Icons.list_alt_rounded,
           onPressed: () => Navigator.popAndPushNamed(context, "/inout/list"),
         ),
+        const Spacer(),
+        MexanydPageButton(
+          text1: AppLocalizations.of(context)!.config,
+          icon: Icons.settings_rounded,
+          onPressed: () => Navigator.popAndPushNamed(context, "/config"),
+        ),
       ],
       child: Center(
         child: Container(

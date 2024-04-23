@@ -23,5 +23,7 @@
     "total": "Total",
     "time": "Hora",
     "type": "Tipo",
-    "page": "Página {current} de {total}"
+    "page": "Página {current} de {total}",
+    "config": "Config.",
+    "fullConfig": "Configurações"
 }

@@ -6,6 +6,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/intl_standalone.dart';
 import 'package:intl/locale.dart' as intl_locale;
+import 'package:mexanyd_desktop/configuration.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/database/local.dart';
 import 'package:mexanyd_desktop/inout/input.dart';
@@ -183,6 +184,8 @@ class _AppState extends State<App> {
     switch (settings.name) {
       case '/inout/list':
         return _pageRouteBuilder(const InOutListPage());
+      case '/config':
+        return _pageRouteBuilder(const ConfigurationPage());
       default:
         return _pageRouteBuilder(const InOutInputPage());
     }
