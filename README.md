@@ -17,7 +17,7 @@ Consider donating to make Mexanyd Desktop development possible. You can donate t
 
 ## Building/running
 
-*No methods are available for now.*
+You can run the project using `flutter run` and build using `flutter build`, check [Flutter's documentation](https://docs.flutter.dev/) about building to check where the executable will be generated.
 
 ## Credits
 
