@@ -26,5 +26,6 @@
     "type": "Tipo",
     "page": "Página {current} de {total}",
     "config": "Config.",
-    "fullConfig": "Configurações"
+    "fullConfig": "Configurações",
+    "language": "Idioma"
 }

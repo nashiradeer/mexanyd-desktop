@@ -43,5 +43,6 @@
         }
     },
     "config": "Config.",
-    "fullConfig": "Configuration"
+    "fullConfig": "Configuration",
+    "language": "Language"
 }
