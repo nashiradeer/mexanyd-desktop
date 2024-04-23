@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
+import 'package:mexanyd_desktop/main.dart';
 
 class InOutController extends ChangeNotifier {
   int year;
@@ -249,7 +250,9 @@ class _InOutItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              DateFormat.yMd().add_Hms().format(inOut.creation),
+              DateFormat.yMd(appController.locale?.toLanguageTag())
+                  .add_Hms()
+                  .format(inOut.creation),
               style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w400),
             ),
             Row(

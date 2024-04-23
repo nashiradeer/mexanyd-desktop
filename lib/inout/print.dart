@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
+import 'package:mexanyd_desktop/main.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -29,7 +30,8 @@ void printMonthInOut(int year, int month, BuildContext buildContext) async {
               width: double.infinity,
               padding: const pw.EdgeInsets.only(top: 1, bottom: 1),
               child: pw.Text(
-                DateFormat.yMMMM().format(DateTime(year, month)),
+                DateFormat.yMMMM(appController.locale?.toLanguageTag())
+                    .format(DateTime(year, month)),
                 textAlign: pw.TextAlign.center,
                 style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
               ),
@@ -117,7 +119,7 @@ void printMonthInOut(int year, int month, BuildContext buildContext) async {
                       pw.Padding(
                         padding: const pw.EdgeInsets.all(1),
                         child: pw.Text(
-                          DateFormat.E()
+                          DateFormat.E(appController.locale?.toLanguageTag())
                               .format(DateTime(year, month, item.key)),
                           textAlign: pw.TextAlign.center,
                         ),
@@ -247,7 +249,8 @@ void printDayInOut(
                 width: double.infinity,
                 padding: const pw.EdgeInsets.only(top: 1, bottom: 1),
                 child: pw.Text(
-                  DateFormat.yMd().format(DateTime(year, month, day)),
+                  DateFormat.yMd(appController.locale?.toLanguageTag())
+                      .format(DateTime(year, month, day)),
                   textAlign: pw.TextAlign.center,
                 ),
                 decoration: pw.BoxDecoration(
@@ -309,7 +312,8 @@ void printDayInOut(
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(1),
                           child: pw.Text(
-                            DateFormat.Hm().format(item.creation),
+                            DateFormat.Hm(appController.locale?.toLanguageTag())
+                                .format(item.creation),
                             textAlign: pw.TextAlign.center,
                           ),
                         ),
