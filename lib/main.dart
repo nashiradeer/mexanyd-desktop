@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/intl_standalone.dart';
 import 'package:intl/locale.dart' as intl_locale;
@@ -39,7 +38,6 @@ void main() async {
 
   final locale = prefs.getString("locale") ?? await findSystemLocale();
   Intl.defaultLocale = locale;
-  await initializeDateFormatting(locale);
   prefs.setString("locale", locale);
 
   var theme = ThemeMode.system;
@@ -76,7 +74,11 @@ void main() async {
   appController = AppController(
     theme: theme,
     locale: parsedLocale != null
-        ? Locale(parsedLocale.languageCode, parsedLocale.countryCode)
+        ? Locale.fromSubtags(
+            languageCode: parsedLocale.languageCode,
+            scriptCode: parsedLocale.scriptCode,
+            countryCode: parsedLocale.countryCode,
+          )
         : null,
     error: error,
   );
@@ -122,11 +124,8 @@ class AppController extends ChangeNotifier {
 
     if (locale != null) {
       SharedPreferences.getInstance().then((prefs) {
-        prefs.setString(
-            "locale", "${locale.languageCode}_${locale.countryCode}");
+        prefs.setString("locale", locale.toLanguageTag());
       });
-
-      initializeDateFormatting("${locale.languageCode}_${locale.countryCode}");
     } else {
       SharedPreferences.getInstance().then((prefs) {
         prefs.remove("locale");
