@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MexanydRadioController extends ChangeNotifier {
-  int _selectedIndex;
+  int _selectedIndex = 0;
 
   MexanydRadioController([selectedIndex = 0]) : _selectedIndex = selectedIndex;
 
@@ -15,19 +15,21 @@ class MexanydRadioController extends ChangeNotifier {
 
 class MexanydIconRadio extends StatefulWidget {
   final List<IconData> icons;
-  final MexanydRadioController controller;
   final double size;
   final double borderRadius;
   final Color? selectedColor;
   final Color? unselectedColor;
   final Function(int)? onChanged;
+  final MexanydRadioController? controller;
+  final int selectedIndex;
 
   const MexanydIconRadio({
     super.key,
     required this.icons,
-    required this.controller,
+    this.controller,
     this.size = 30,
     this.borderRadius = 10,
+    this.selectedIndex = 0,
     this.selectedColor,
     this.unselectedColor,
     this.onChanged,
@@ -38,30 +40,43 @@ class MexanydIconRadio extends StatefulWidget {
 }
 
 class _MexanydIconRadioState extends State<MexanydIconRadio> {
+  int selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(_updateState);
+
+    if (widget.controller != null) {
+      widget.controller!.addListener(_updateState);
+      selectedIndex = widget.controller!.selectedIndex;
+    } else {
+      selectedIndex = widget.selectedIndex;
+    }
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(_updateState);
+    if (widget.controller != null) {
+      widget.controller!.removeListener(_updateState);
+    }
+
     super.dispose();
   }
 
   void _updateState() {
-    setState(() {});
+    setState(() {
+      selectedIndex = widget.controller!.selectedIndex;
+    });
   }
 
   Color _foregroundColor(int index, BuildContext context) {
-    return widget.controller.selectedIndex == index
+    return selectedIndex == index
         ? widget.selectedColor ?? Theme.of(context).colorScheme.background
         : widget.unselectedColor ?? Theme.of(context).colorScheme.primary;
   }
 
   Color _backgroundColor(int index, BuildContext context) {
-    return widget.controller.selectedIndex == index
+    return selectedIndex == index
         ? widget.selectedColor ?? Theme.of(context).colorScheme.primary
         : widget.unselectedColor ??
             Theme.of(context).colorScheme.surfaceVariant;
@@ -93,7 +108,14 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
             ),
             color: _foregroundColor(0, context),
             onPressed: () {
-              widget.controller.setSelectedIndex(0);
+              if (widget.controller != null) {
+                widget.controller!.setSelectedIndex(0);
+              } else {
+                setState(() {
+                  selectedIndex = 0;
+                });
+              }
+
               if (widget.onChanged != null) {
                 widget.onChanged!(0);
               }
@@ -114,7 +136,14 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
               ),
               color: _foregroundColor(index, context),
               onPressed: () {
-                widget.controller.setSelectedIndex(index);
+                if (widget.controller != null) {
+                  widget.controller!.setSelectedIndex(index);
+                } else {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                }
+
                 if (widget.onChanged != null) {
                   widget.onChanged!(index);
                 }
@@ -140,7 +169,14 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
             ),
             color: _foregroundColor(widget.icons.length - 1, context),
             onPressed: () {
-              widget.controller.setSelectedIndex(widget.icons.length - 1);
+              if (widget.controller != null) {
+                widget.controller!.setSelectedIndex(widget.icons.length - 1);
+              } else {
+                setState(() {
+                  selectedIndex = widget.icons.length - 1;
+                });
+              }
+
               if (widget.onChanged != null) {
                 widget.onChanged!(widget.icons.length - 1);
               }
