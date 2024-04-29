@@ -1,0 +1,24 @@
+display_name: Mexanyd Desktop
+icon: icon.svg
+summary: A tool created to help with tasks from an auto parts store.
+group: Applications/Productivity
+vendor: Nashira Deer
+packager: Nashira Deer
+packagerEmail: nashiradeer@gmail.com
+license: PROPRIETARY
+url: https://www.nashiradeer.com/
+
+build_arch: x86_64
+
+requires:
+  - sqlite
+
+keywords:
+  - Autoparts
+  - Store
+  - Mexanyd
+
+categories:
+  - Utility
+
+startup_notify: true

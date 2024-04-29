@@ -1,0 +1,29 @@
+display_name: Mexanyd Desktop
+package_name: mexanyd-desktop
+
+maintainer:
+  name: Nashira Deer
+  email: nashiradeer@gmail.com
+
+priority: optional
+
+section: x11
+
+installed_size: 30000
+
+dependencies:
+  - libsqlite3-0
+
+essential: false
+
+icon: icon.svg
+
+keywords:
+  - Autoparts
+  - Store
+  - Mexanyd
+
+categories:
+  - Utility
+
+startup_notify: true
