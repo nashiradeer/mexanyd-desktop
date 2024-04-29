@@ -39,5 +39,23 @@
 			<ComponentRef Id="MainDlls" />
 			<ComponentGroupRef Id="DataDirFiles" />
 		</Feature>
+
+		<Icon Id="icon.ico" SourceFile="..\runner\resources\app_icon.ico"/>
+		<Property Id="ARPPRODUCTICON" Value="icon.ico" />
+
+		<UI>
+			<UIRef Id="WixUI_Minimal" />
+			<Publish Dialog="ExitDialog"
+				Control="Finish"
+				Event="DoAction"
+				Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed"
+				Value="LaunchApplicationAction" />
+		</UI>
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.LaunchApplication)"/>
+
+		<CustomAction Id="WixShellExec" Property="INSTALLFOLDER" Value="[INSTALLFOLDER]mexanyd_desktop.exe"/>
+		<CustomAction Id="LaunchApplicationAction"
+			DllEntry="WixShellExec"
+			Impersonate="yes" />
 	</Package>
 </Wix>
