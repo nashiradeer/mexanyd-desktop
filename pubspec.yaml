@@ -1,7 +1,7 @@
 name: mexanyd_desktop
 description: "A tool created to help with tasks from an auto parts store."
 publish_to: "none"
-version: 0.0.1-alpha.2
+version: 0.0.1-alpha.1
 
 environment:
   sdk: ">=3.3.3 <4.0.0"
