@@ -81,26 +81,32 @@ class ConfigurationPage extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 32, fontWeight: FontWeight.bold)),
               const SizedBox(height: 10),
-              DropdownButton(
-                items: const [
-                  DropdownMenuItem(
-                    value: "en",
-                    child: Text("English"),
-                  ),
-                  DropdownMenuItem(
-                    value: "pt",
-                    child: Text("Português"),
-                  ),
-                ],
-                onChanged: (value) {
-                  appController
-                      .setLocale((value != null) ? Locale(value) : null);
-                },
-                value: appController.locale?.languageCode,
-                borderRadius: BorderRadius.circular(10),
-                padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
-                icon: const Icon(Icons.arrow_drop_down_rounded),
-                underline: Container(),
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: DropdownButton(
+                  items: const [
+                    DropdownMenuItem(
+                      value: "en",
+                      child: Text("English"),
+                    ),
+                    DropdownMenuItem(
+                      value: "pt",
+                      child: Text("Português"),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    appController
+                        .setLocale((value != null) ? Locale(value) : null);
+                  },
+                  value: appController.locale?.languageCode,
+                  borderRadius: BorderRadius.circular(10),
+                  padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                  icon: const Icon(Icons.arrow_drop_down_rounded),
+                  underline: Container(),
+                ),
               ),
             ],
           ),
