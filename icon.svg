@@ -24,9 +24,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="px"
      showguides="false"
-     inkscape:zoom="0.44263227"
-     inkscape:cx="-117.47901"
-     inkscape:cy="312.90082"
+     inkscape:zoom="0.62597656"
+     inkscape:cx="55.912637"
+     inkscape:cy="195.69423"
      inkscape:window-width="1600"
      inkscape:window-height="837"
      inkscape:window-x="-8"
@@ -37,20 +37,19 @@
      id="defs1" />
   <g
      id="g2"
-     style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;stroke-width:78.41545926;stroke-dasharray:none"
+     style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:78.4159;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
      inkscape:label="back"
-     transform="matrix(0.90047393,0,0,0.88495575,25.478674,29.451328)">
+     transform="matrix(0.80036969,0,0,0.81308456,51.105359,47.85034)">
     <path
        id="path2"
-       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:89.61766772;stroke-opacity:1;stroke-dasharray:none;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;paint-order:normal"
-       d="M 205.00038 29.999999 L 44.999999 184.9998 L 44.999999 327.0002 L 205.00038 482 L 306.99962 482 L 467 327.0002 L 467 184.9998 L 306.99962 29.999999 L 205.00038 29.999999 z " />
+       style="display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:78.4159;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill"
+       d="M 195.35237,-19.642435 5.0834209,169.40412 V 342.59588 L 195.35237,531.64243 H 316.64763 L 506.91658,342.59588 V 169.40412 L 316.64763,-19.642435 Z" />
   </g>
   <g
      id="g1"
      style="display:inline;fill:#0095ff;fill-opacity:1;stroke:none"
-     transform="matrix(0.90047393,0,0,0.88495575,25.478674,29.451328)"
-     inkscape:label="icon"
-     sodipodi:insensitive="true">
+     transform="matrix(0.80036969,0,0,0.81308456,51.105359,47.85034)"
+     inkscape:label="icon">
     <path
        style="fill:#0095ff;fill-opacity:1;stroke:none;stroke-width:17;stroke-dasharray:none;stroke-opacity:1"
        d="M 205,482 45,327 V 185 L 205,30 V 90 L 90,200 v 112 l 115,110 z"
