@@ -1,9 +1,0 @@
-﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
-  <Package Name="Mexanyd Desktop" Manufacturer="Nashira Deer" Version="0.0.1.0" UpgradeCode="44ac4e1a-3cc0-4764-bdfe-56cfbf87f8c3">
-    <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
-
-    <Feature Id="Main">
-      <ComponentGroupRef Id="ExampleComponents" />
-    </Feature>
-  </Package>
-</Wix>
