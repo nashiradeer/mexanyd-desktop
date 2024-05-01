@@ -1,65 +1,100 @@
-﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
-  xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
-	<Package Name="Mexanyd Desktop" Manufacturer="Nashira Deer" Version="0.0.1.0" UpgradeCode="44ac4e1a-3cc0-4764-bdfe-56cfbf87f8c3">
-		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
+﻿<Wix
+  xmlns="http://wixtoolset.org/schemas/v4/wxs"
+  xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+>
+  <Package
+    Name="Mexanyd Desktop"
+    Manufacturer="Nashira Deer"
+    Version="0.0.1.0"
+    UpgradeCode="44ac4e1a-3cc0-4764-bdfe-56cfbf87f8c3"
+  >
+    <MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
 
-		<StandardDirectory Id="ProgramFiles64Folder">
-			<Directory Id="INSTALLFOLDER" Name="!(bind.Property.ProductName)">
-				<Directory Id="DataDir" Name="data" />
-			</Directory>
-		</StandardDirectory>
+    <MediaTemplate EmbedCab="yes" />
 
-		<DirectoryRef Id="INSTALLFOLDER">
-			<Component Id="MainExecutable" Guid="d85656f8-a1ab-45f0-b531-c0bc336e8f58">
-				<File Id="MAINEXE" Source="app/mexanyd_desktop.exe" KeyPath="yes" Checksum="yes" />
-			</Component>
-			<Component Id="MainDlls" Guid="d7fd6af3-9e10-464c-b8d1-9b28260830ab">
-				<File Source="app/flutter_windows.dll" />
-				<File Source="app/pdfium.dll" />
-				<File Source="app/printing_plugin.dll" />
-				<File Source="app/screen_retriever_plugin.dll" />
-				<File Source="app/sqlite3.dll" />
-				<File Source="app/window_manager_plugin.dll" />
-			</Component>
-		</DirectoryRef>
-		<StandardDirectory Id="ProgramMenuFolder">
-			<Component Id="ApplicationShortcut" Guid="4e72598f-23c5-43da-b56a-d0c329fc7428">
-				<Shortcut Id="ApplicationStartMenuShortcut"
-						  Name="!(bind.Property.ProductName)"
-						  Description="A tool created to help with tasks from an auto parts store."
-						  Target="[INSTALLFOLDER]mexanyd_desktop.exe"
-						  WorkingDirectory="INSTALLFOLDER" />
-				<RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
-				<RegistryValue Root="HKCU" Key="Software\NashiraDeer\Mexanyd Desktop" Name="installed" Type="integer" Value="1" KeyPath="yes" />
-			</Component>
-		</StandardDirectory>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="!(bind.Property.ProductName)">
+        <Directory Id="DataDir" Name="data" />
+      </Directory>
+    </StandardDirectory>
 
-		<Feature Id="Main">
-			<ComponentRef Id="MainExecutable" />
-			<ComponentRef Id="ApplicationShortcut" />
-			<ComponentRef Id="MainDlls" />
-			<ComponentGroupRef Id="DataDirFiles" />
-		</Feature>
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component
+        Id="MainExecutable"
+        Guid="d85656f8-a1ab-45f0-b531-c0bc336e8f58"
+      >
+        <File
+          Id="MAINEXE"
+          Source="app/mexanyd_desktop.exe"
+          KeyPath="yes"
+          Checksum="yes"
+        />
+      </Component>
+      <Component Id="MainDlls" Guid="d7fd6af3-9e10-464c-b8d1-9b28260830ab">
+        <File Source="app/flutter_windows.dll" />
+        <File Source="app/pdfium.dll" />
+        <File Source="app/printing_plugin.dll" />
+        <File Source="app/screen_retriever_plugin.dll" />
+        <File Source="app/sqlite3.dll" />
+        <File Source="app/window_manager_plugin.dll" />
+      </Component>
+    </DirectoryRef>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Component
+        Id="ApplicationShortcut"
+        Guid="4e72598f-23c5-43da-b56a-d0c329fc7428"
+      >
+        <Shortcut
+          Id="ApplicationStartMenuShortcut"
+          Name="!(bind.Property.ProductName)"
+          Description="A tool created to help with tasks from an auto parts store."
+          Target="[INSTALLFOLDER]mexanyd_desktop.exe"
+          WorkingDirectory="INSTALLFOLDER"
+        />
+        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall" />
+        <RegistryValue
+          Root="HKCU"
+          Key="Software\NashiraDeer\Mexanyd Desktop"
+          Name="installed"
+          Type="integer"
+          Value="1"
+          KeyPath="yes"
+        />
+      </Component>
+    </StandardDirectory>
 
-		<Icon Id="icon.ico" SourceFile="..\runner\resources\app_icon.ico" />
-		<Property Id="ARPPRODUCTICON" Value="icon.ico" />
+    <Feature Id="Main">
+      <ComponentRef Id="MainExecutable" />
+      <ComponentRef Id="ApplicationShortcut" />
+      <ComponentRef Id="MainDlls" />
+      <ComponentGroupRef Id="DataDirFiles" />
+    </Feature>
 
+    <Icon Id="icon.ico" SourceFile="..\runner\resources\app_icon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
 
-		<ui:WixUI Id="MxdUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
-		<UI>
-			<Publish Dialog="ExitDialog"
-				Control="Finish"
-				Event="DoAction"
-				Value="LaunchApplication"
-				Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed" />
-		</UI>
-		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.LaunchApplication)" />
+    <ui:WixUI Id="MxdUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+    <UI>
+      <Publish
+        Dialog="ExitDialog"
+        Control="Finish"
+        Event="DoAction"
+        Value="LaunchApplication"
+        Condition="WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed"
+      />
+    </UI>
+    <Property
+      Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT"
+      Value="!(loc.LaunchApplication)"
+    />
 
-		<CustomAction Id="LaunchApplication"
-              Execute="immediate"
-              Impersonate="no"
-              Return="asyncNoWait"
-              FileRef="MAINEXE"
-              ExeCommand="" />
-	</Package>
-</Wix>
+    <CustomAction
+      Id="LaunchApplication"
+      Execute="immediate"
+      Impersonate="no"
+      Return="asyncNoWait"
+      FileRef="MAINEXE"
+      ExeCommand=""
+    />
+  </Package>
+</Wix>;
