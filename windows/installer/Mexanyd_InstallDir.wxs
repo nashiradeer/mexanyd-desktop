@@ -5,18 +5,18 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
 	<?foreach WIXUIARCH in X86;X64;A64 ?>
 	<Fragment>
-		<UI Id="MxdUI_InstallDir_$(WIXUIARCH)">
+		<UI Id="Mexanyd_InstallDir_$(WIXUIARCH)">
 			<!-- <Publish Dialog="LicenseAgreementDlg" Control="Print" Event="DoAction" Value="WixUIPrintEula_$(WIXUIARCH)" /> -->
 			<Publish Dialog="BrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath_$(WIXUIARCH)" Order="3" Condition="NOT WIXUI_DONTVALIDATEPATH" />
 			<Publish Dialog="InstallDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath_$(WIXUIARCH)" Order="2" Condition="NOT WIXUI_DONTVALIDATEPATH" />
 		</UI>
 
-		<UIRef Id="MxdUI_InstallDir" />
+		<UIRef Id="Mexanyd_InstallDir" />
 	</Fragment>
 	<?endforeach?>
 
 	<Fragment>
-		<UI Id="file MxdUI_InstallDir">
+		<UI Id="file Mexanyd_InstallDir">
 			<TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
 			<TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
 			<TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
