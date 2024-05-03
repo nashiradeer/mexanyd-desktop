@@ -1,6 +1,3 @@
-# Application files
-app/
-
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 [Bb]in/
 [Oo]bj/
@@ -112,3 +109,6 @@ UpgradeLog*.XML
 
 # Dot VS folder
 .vs/
+
+# Include the Redistribuble files
+!redist/**/*
