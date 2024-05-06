@@ -79,10 +79,6 @@ enum InOutType {
 
 /// Represents an input or output.
 class InOut {
-  static const int moneyType = 0;
-  static const int creditType = 1;
-  static const int futureType = 2;
-
   /// The unique identifier of the in/out.
   final int id;
 
