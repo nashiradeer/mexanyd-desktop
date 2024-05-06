@@ -120,6 +120,15 @@ class MexanydPageButton extends StatelessWidget {
     this.text2,
   });
 
+  static MexanydPageButton copyDisabled(MexanydPageButton button) {
+    return MexanydPageButton(
+      text1: button.text1,
+      text2: button.text2,
+      icon: button.icon,
+      onPressed: null,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
