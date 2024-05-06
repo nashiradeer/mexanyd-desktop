@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mexanyd_desktop/inout/base.dart';
 import 'package:mexanyd_desktop/inout/print.dart';
+import 'package:mexanyd_desktop/sidemenu.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
 class InOutListPage extends StatefulWidget {
@@ -33,26 +34,7 @@ class _InOutListState extends State<InOutListPage> {
     return MexanydPage(
       title: AppLocalizations.of(context)!.list,
       icon: Icons.list_alt_rounded,
-      actions: [
-        MexanydPageButton(
-          text1: AppLocalizations.of(context)!.inNoOut,
-          text2: AppLocalizations.of(context)!.out,
-          icon: Icons.swap_vert_rounded,
-          onPressed: () => Navigator.popAndPushNamed(context, "/inout"),
-        ),
-        const SizedBox(height: 5),
-        MexanydPageButton(
-          text1: AppLocalizations.of(context)!.list,
-          icon: Icons.list_alt_rounded,
-          onPressed: null,
-        ),
-        const Spacer(),
-        MexanydPageButton(
-          text1: AppLocalizations.of(context)!.config,
-          icon: Icons.settings_rounded,
-          onPressed: () => Navigator.popAndPushNamed(context, "/config"),
-        ),
-      ],
+      actions: SideMenu(context).disableList(),
       child: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 1000),

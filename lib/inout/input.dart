@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/inout/base.dart';
+import 'package:mexanyd_desktop/sidemenu.dart';
 import 'package:mexanyd_desktop/widgets/buttons.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
@@ -27,26 +28,7 @@ class _InOutInputState extends State<InOutInputPage> {
     return MexanydPage(
       title: AppLocalizations.of(context)!.inOut,
       icon: Icons.swap_vert_rounded,
-      actions: [
-        MexanydPageButton(
-          text1: AppLocalizations.of(context)!.inNoOut,
-          text2: AppLocalizations.of(context)!.out,
-          icon: Icons.swap_vert_rounded,
-          onPressed: null,
-        ),
-        const SizedBox(height: 5),
-        MexanydPageButton(
-          text1: AppLocalizations.of(context)!.list,
-          icon: Icons.list_alt_rounded,
-          onPressed: () => Navigator.popAndPushNamed(context, "/inout/list"),
-        ),
-        const Spacer(),
-        MexanydPageButton(
-          text1: AppLocalizations.of(context)!.config,
-          icon: Icons.settings_rounded,
-          onPressed: () => Navigator.popAndPushNamed(context, "/config"),
-        ),
-      ],
+      actions: SideMenu(context).disableInOut(),
       child: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 1000),
