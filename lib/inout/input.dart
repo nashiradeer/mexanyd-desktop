@@ -7,20 +7,34 @@ import 'package:mexanyd_desktop/sidemenu.dart';
 import 'package:mexanyd_desktop/widgets/buttons.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
+/// The page for inputting in/outs.
 class InOutInputPage extends StatefulWidget {
+  /// Creates a new in/out input page.
   const InOutInputPage({super.key});
 
   @override
   State<InOutInputPage> createState() => _InOutInputState();
 }
 
+/// The state of the in/out input page.
 class _InOutInputState extends State<InOutInputPage> {
+  /// The controller for the value text field.
   final TextEditingController _valueController = TextEditingController();
+
+  /// The controller for the description text field.
   final TextEditingController _descriptionController = TextEditingController();
+
+  /// The controller for the in/out list.
   final InOutController _inOutController = InOutController.fromDateTimeNow();
+
+  /// The controller for the icon radio that selects the in/out type.
   final MexanydRadioController _mexanydRadioController =
       MexanydRadioController();
+
+  /// The focus node for the value text field.
   final _valueFocus = FocusNode();
+
+  /// Whether the value is invalid.
   bool _error = false;
 
   @override
@@ -152,6 +166,7 @@ class _InOutInputState extends State<InOutInputPage> {
     );
   }
 
+  /// Saves the in/out.
   void _save({bool invert = false}) {
     var value = double.tryParse(_valueController.text);
 

@@ -5,9 +5,12 @@ import 'package:mexanyd_desktop/sidemenu.dart';
 import 'package:mexanyd_desktop/widgets/buttons.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
+/// A page that shows the configuration options.
 class ConfigurationPage extends StatelessWidget {
+  /// Creates a new [ConfigurationPage].
   const ConfigurationPage({super.key});
 
+  /// Returns the index of the theme.
   int _themeIndex(ThemeMode? theme) {
     switch (theme) {
       case ThemeMode.light:

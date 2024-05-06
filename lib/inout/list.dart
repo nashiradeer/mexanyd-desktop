@@ -6,22 +6,37 @@ import 'package:mexanyd_desktop/inout/print.dart';
 import 'package:mexanyd_desktop/sidemenu.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
+/// The page for listing in/outs.
 class InOutListPage extends StatefulWidget {
+  /// Creates a new in/out list page.
   const InOutListPage({super.key});
 
   @override
   State<InOutListPage> createState() => _InOutListState();
 }
 
+/// The state of the in/out list page.
 class _InOutListState extends State<InOutListPage> {
+  /// The controller for the year text field.
   final TextEditingController _yearController = TextEditingController();
+
+  /// The controller for the month text field.
   final TextEditingController _monthController = TextEditingController();
+
+  /// The controller for the day text field.
   final TextEditingController _dayController = TextEditingController();
+
+  /// The controller for the in/out list.
   final InOutController _inOutController =
       InOutController.fromDateTimeMonthNow();
 
+  /// Whether the year is invalid.
   bool _yearError = false;
+
+  /// Whether the month is invalid.
   bool _monthError = false;
+
+  /// Whether the day is invalid.
   bool _dayError = false;
 
   @override
@@ -219,6 +234,7 @@ class _InOutListState extends State<InOutListPage> {
     );
   }
 
+  /// Fetches the in/outs.
   void _fetch() {
     final year = int.tryParse(_yearController.text);
     _yearError = year == null || year < 0 || year > 9999;

@@ -17,6 +17,7 @@ import 'package:window_manager/window_manager.dart';
 
 late AppController appController;
 
+/// Application entry point.
 void main() async {
   final prefs = await SharedPreferences.getInstance();
 
@@ -86,20 +87,33 @@ void main() async {
   runApp(App(appController));
 }
 
+/// Controller for the application.
 class AppController extends ChangeNotifier {
+  /// The theme mode of the application.
   ThemeMode? _theme;
+
+  /// The locale of the application.
   Locale? _locale;
+
+  /// The error code of the application.
   int? _error;
 
+  /// Gets the theme mode of the application.
   ThemeMode? get theme => _theme;
+
+  /// Gets the locale of the application.
   Locale? get locale => _locale;
+
+  /// Gets the error code of the application.
   int? get error => _error;
 
+  /// Creates a new [AppController].
   AppController({ThemeMode? theme, Locale? locale, int? error})
       : _theme = theme,
         _locale = locale,
         _error = error;
 
+  /// Sets the theme mode of the application.
   void setTheme(ThemeMode? theme) {
     _theme = theme;
     SharedPreferences.getInstance().then((prefs) {
@@ -108,6 +122,7 @@ class AppController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Converts a [ThemeMode] to a string.
   String _themeToString(ThemeMode? theme) {
     switch (theme) {
       case ThemeMode.dark:
@@ -119,6 +134,7 @@ class AppController extends ChangeNotifier {
     }
   }
 
+  /// Sets the locale of the application.
   void setLocale(Locale? locale) {
     _locale = locale;
 
@@ -135,21 +151,26 @@ class AppController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Sets the error code of the application.
   void setError(int? error) {
     _error = error;
     notifyListeners();
   }
 }
 
+/// The application widget.
 class App extends StatefulWidget {
+  /// The controller of the application.
   final AppController controller;
 
+  /// Creates a new [App].
   const App(this.controller, {super.key});
 
   @override
   State<App> createState() => _AppState();
 }
 
+/// State of the [App].
 class _AppState extends State<App> {
   @override
   void initState() {
@@ -179,6 +200,7 @@ class _AppState extends State<App> {
     );
   }
 
+  /// Generates a route based on the settings.
   PageRouteBuilder _pageRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/inout/list':
@@ -190,6 +212,7 @@ class _AppState extends State<App> {
     }
   }
 
+  /// Creates a page route builder, removing the transition.
   PageRouteBuilder _pageRouteBuilder(Widget page) {
     return PageRouteBuilder(
       pageBuilder: (context, animation1, animation2) => page,
@@ -199,9 +222,12 @@ class _AppState extends State<App> {
   }
 }
 
+/// A page that shows an error message.
 class ErrorPage extends StatelessWidget {
+  /// The error code.
   final int code;
 
+  /// Creates a new [ErrorPage].
   const ErrorPage(this.code, {super.key});
 
   @override
@@ -239,6 +265,7 @@ class ErrorPage extends StatelessWidget {
     );
   }
 
+  /// Returns the error message based on the error code.
   String _errorMessage(int code, BuildContext context) {
     switch (code) {
       case 0:

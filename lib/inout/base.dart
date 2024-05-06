@@ -4,31 +4,43 @@ import 'package:intl/intl.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/main.dart';
 
+/// Controller for the [InOut] list.
 class InOutController extends ChangeNotifier {
+  /// Year used to filter the list.
   int year;
+
+  /// Month used to filter the list.
   int month;
+
+  /// Day used to filter the list. If null, all days of the month are used.
   int? day;
 
+  /// Creates a new [InOutController].
   InOutController(this.year, this.month, [this.day]);
 
+  /// Creates a new [InOutController] from a [DateTime].
   static InOutController fromDateTime(DateTime dateTime) {
     return InOutController(dateTime.year, dateTime.month, dateTime.day);
   }
 
+  /// Creates a new [InOutController] from the current [DateTime].
   static InOutController fromDateTimeNow() {
     final now = DateTime.now();
     return InOutController.fromDateTime(now);
   }
 
+  /// Creates a new [InOutController] from a [DateTime] with only year and month.
   static InOutController fromDateTimeMonth(DateTime dateTime) {
     return InOutController(dateTime.year, dateTime.month);
   }
 
+  /// Creates a new [InOutController] from the current [DateTime] with only year and month.
   static InOutController fromDateTimeMonthNow() {
     final now = DateTime.now();
     return InOutController.fromDateTimeMonth(now);
   }
 
+  /// Fetches a new list of [InOut]s, changing the year, month and day.
   void fetch(int year, int month, [int? day]) {
     this.year = year;
     this.month = month;
@@ -36,25 +48,42 @@ class InOutController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Fetches a new list of [InOut]s without changing the year, month and day.
   void reload() {
     notifyListeners();
   }
 }
 
+/// Union of [InOut] and [InOutStats].
 class _InOutData {
+  /// List of [InOut]s.
   final List<InOut> data;
+
+  /// Number of pages.
   final int pageCount;
+
+  /// The sum of all values of the [InOut]s.
   final double totalValue;
 
+  /// Creates a new [_InOutData].
   const _InOutData(this.data, this.pageCount, this.totalValue);
 }
 
+/// List of [InOut]s.
 class InOutList extends StatefulWidget {
+  /// Controller for the list.
   final InOutController controller;
+
+  /// If true, a delete button is shown.
   final bool deleteButton;
+
+  /// Number of items per page.
   final int itemPerPage;
+
+  /// If true, the list is reversed.
   final bool reversed;
 
+  /// Creates a new [InOutList].
   const InOutList(this.controller,
       {super.key,
       this.deleteButton = false,
@@ -65,8 +94,12 @@ class InOutList extends StatefulWidget {
   State<InOutList> createState() => _InOutListState();
 }
 
+/// State of the [InOutList].
 class _InOutListState extends State<InOutList> {
+  /// Current page.
   int page = 0;
+
+  /// Number of pages.
   int pageCount = 0;
 
   @override
@@ -81,10 +114,12 @@ class _InOutListState extends State<InOutList> {
     super.dispose();
   }
 
+  /// Updates the widget.
   void _updateWidget() {
     setState(() {});
   }
 
+  /// Goes to the next page.
   void _nextPage() {
     if (page < pageCount - 1) {
       setState(() {
@@ -93,6 +128,7 @@ class _InOutListState extends State<InOutList> {
     }
   }
 
+  /// Goes to the previous page.
   void _prevPage() {
     if (page > 0) {
       setState(() {
@@ -101,6 +137,7 @@ class _InOutListState extends State<InOutList> {
     }
   }
 
+  /// Fetches the data.
   Future<_InOutData> _fetchData() async {
     final year = widget.controller.year;
     final month = widget.controller.month;
@@ -143,6 +180,7 @@ class _InOutListState extends State<InOutList> {
         });
   }
 
+  /// Builds the loading widget.
   Widget _buildLoading() {
     return const Expanded(
       child: Center(
@@ -158,6 +196,7 @@ class _InOutListState extends State<InOutList> {
     );
   }
 
+  /// Builds the error widget.
   Widget _buildError(String message) {
     return Expanded(
       child: Column(
@@ -175,6 +214,7 @@ class _InOutListState extends State<InOutList> {
     );
   }
 
+  /// Builds the widget when there is no data.
   Widget _buildEmpty() {
     return Expanded(
       child: Center(
@@ -186,6 +226,7 @@ class _InOutListState extends State<InOutList> {
     );
   }
 
+  /// Builds the list widget.
   Widget _buildList(_InOutData data) {
     return Expanded(
       child: Column(
@@ -207,6 +248,7 @@ class _InOutListState extends State<InOutList> {
     );
   }
 
+  /// Builds the paginator widget.
   Widget _buildPaginator(double totalValue) {
     return Row(
       children: [
@@ -230,11 +272,18 @@ class _InOutListState extends State<InOutList> {
   }
 }
 
+/// Item of the [InOutList].
 class _InOutItem extends StatelessWidget {
+  /// The [InOut] to show.
   final InOut inOut;
+
+  /// If true, a delete button is shown.
   final bool deleteButton;
+
+  /// Controller for the list.
   final InOutController controller;
 
+  /// Creates a new [_InOutItem].
   const _InOutItem(this.inOut, this.controller, [this.deleteButton = false]);
 
   @override
@@ -299,6 +348,7 @@ class _InOutItem extends StatelessWidget {
     );
   }
 
+  /// Converts an [InOutType] to an [IconData].
   IconData _typeToIcon(InOutType type) {
     switch (type) {
       case InOutType.money:

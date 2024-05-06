@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+/// Returns the background color based on the theme.
 Color? listBackground(BuildContext context) {
   return Theme.of(context).brightness == Brightness.dark
       ? Colors.grey[900]
       : Colors.grey[300];
 }
 
+/// Generates the light theme using the Material 3 design as a base.
 ThemeData lightTheme() {
   var baseTheme = ThemeData.light(useMaterial3: true);
 
@@ -18,6 +20,7 @@ ThemeData lightTheme() {
   );
 }
 
+/// Generates the dark theme using the Material 3 design as a base.
 ThemeData darkTheme() {
   var baseTheme = ThemeData.dark(useMaterial3: true);
 

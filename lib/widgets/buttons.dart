@@ -1,28 +1,50 @@
 import 'package:flutter/material.dart';
 
+/// Controller for Radio Buttons from Mexanyd.
 class MexanydRadioController extends ChangeNotifier {
+  /// The index of the selected radio button.
   int _selectedIndex = 0;
 
+  /// Constructor for [MexanydRadioController].
   MexanydRadioController([selectedIndex = 0]) : _selectedIndex = selectedIndex;
 
+  /// Get the selected index.
   int get selectedIndex => _selectedIndex;
 
+  /// Set the selected index.
   void setSelectedIndex(int index) {
     _selectedIndex = index;
     notifyListeners();
   }
 }
 
+/// Group of radio buttons with icons.
 class MexanydIconRadio extends StatefulWidget {
+  /// List of icons for the radio buttons.
   final List<IconData> icons;
+
+  /// Size of the icons.
   final double size;
+
+  /// Border radius of the radio buttons.
   final double borderRadius;
+
+  /// Color of the selected radio button.
   final Color? selectedColor;
+
+  /// Color of the unselected radio buttons.
   final Color? unselectedColor;
+
+  /// Function to call when the selected index changes.
   final Function(int)? onChanged;
+
+  /// Controller for the radio buttons.
   final MexanydRadioController? controller;
+
+  /// Index of the selected radio button.
   final int selectedIndex;
 
+  /// Constructor for [MexanydIconRadio].
   const MexanydIconRadio({
     super.key,
     required this.icons,
@@ -39,7 +61,9 @@ class MexanydIconRadio extends StatefulWidget {
   State<MexanydIconRadio> createState() => _MexanydIconRadioState();
 }
 
+/// State for [MexanydIconRadio].
 class _MexanydIconRadioState extends State<MexanydIconRadio> {
+  /// Index of the selected radio button.
   int selectedIndex = 0;
 
   @override
@@ -63,18 +87,21 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
     super.dispose();
   }
 
+  /// Update the index using the controller.
   void _updateState() {
     setState(() {
       selectedIndex = widget.controller!.selectedIndex;
     });
   }
 
+  /// Get the foreground color of the radio button.
   Color _foregroundColor(int index, BuildContext context) {
     return selectedIndex == index
         ? widget.selectedColor ?? Theme.of(context).colorScheme.background
         : widget.unselectedColor ?? Theme.of(context).colorScheme.primary;
   }
 
+  /// Get the background color of the radio button.
   Color _backgroundColor(int index, BuildContext context) {
     return selectedIndex == index
         ? widget.selectedColor ?? Theme.of(context).colorScheme.primary
@@ -188,12 +215,21 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
   }
 }
 
+/// Data for the [MexanydIconButton].
 class MexanydIconButtonData {
+  /// Icon for the button.
   final IconData icon;
+
+  /// Function to call when the button is pressed.
   final void Function()? onPressed;
+
+  /// Background color of the button.
   final Color? backgroundColor;
+
+  /// Foreground color of the button.
   final Color? foregroundColor;
 
+  /// Constructor for [MexanydIconButtonData].
   const MexanydIconButtonData({
     required this.icon,
     required this.onPressed,
@@ -202,11 +238,18 @@ class MexanydIconButtonData {
   });
 }
 
+/// Group of icon buttons.
 class MexanydIconButton extends StatelessWidget {
+  /// List of data for the icon buttons.
   final List<MexanydIconButtonData> data;
+
+  /// Size of the icons.
   final double size;
+
+  /// Border radius of the icon buttons.
   final double borderRadius;
 
+  /// Constructor for [MexanydIconButton].
   const MexanydIconButton({
     super.key,
     required this.data,
@@ -214,10 +257,12 @@ class MexanydIconButton extends StatelessWidget {
     this.borderRadius = 10,
   });
 
+  /// Get the background color of the icon button, default to primary color.
   Color _backgroundColor(Color? color, BuildContext context) {
     return color ?? Theme.of(context).colorScheme.primary;
   }
 
+  /// Get the foreground color of the icon button, default to background color.
   Color _foregroundColor(Color? color, BuildContext context) {
     return color ?? Theme.of(context).colorScheme.background;
   }

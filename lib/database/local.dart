@@ -209,6 +209,7 @@ class LocalDatabase extends IDatabase {
             }));
   }
 
+  /// Checks if the value is an integer or a double and returns a double.
   double _getDouble(dynamic value) {
     if (value is int) {
       return value.toDouble();

@@ -9,6 +9,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
+/// Generates a PDF with the monthly in/out, grouped by day.
 void printMonthInOut(int year, int month, BuildContext buildContext) async {
   final days =
       SplayTreeMap.from(await globalDatabase.totalInOutByDay(year, month));
@@ -222,6 +223,7 @@ void printMonthInOut(int year, int month, BuildContext buildContext) async {
   );
 }
 
+/// Generates a PDF with the daily in/out.
 void printDayInOut(
     int year, int month, int day, BuildContext buildContext) async {
   const itemsPerPage = 40;
@@ -376,6 +378,7 @@ void printDayInOut(
   );
 }
 
+/// Converts an [InOutType] to a localized string.
 String _typeToString(InOutType type, BuildContext context) {
   switch (type) {
     case InOutType.money:

@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
+/// A page widget that can be used to create a page with a header, window buttons and side menu.
 class MexanydPage extends StatelessWidget {
+  /// The title of the page.
   final String? title;
+
+  /// The icon of the page.
   final IconData? icon;
+
+  /// The child widget of the page.
   final Widget child;
+
+  /// The actions for the side menu.
   final List<Widget>? actions;
 
+  /// Creates a new MexanydPage.
   const MexanydPage(
       {super.key, required this.child, this.title, this.icon, this.actions});
 
@@ -32,6 +41,7 @@ class MexanydPage extends StatelessWidget {
     );
   }
 
+  /// Builds the header of the page.
   Widget _buildHeader(BuildContext context) {
     return Row(
       children: [
@@ -70,6 +80,7 @@ class MexanydPage extends StatelessWidget {
     );
   }
 
+  /// Builds the icon of the page.
   Widget _buildIcon(BuildContext context) {
     return Container(
       width: 40,
@@ -79,6 +90,7 @@ class MexanydPage extends StatelessWidget {
     );
   }
 
+  /// Builds the window buttons of the page.
   Widget _buildWindowButtons(BuildContext context) {
     return Row(
       children: [
@@ -96,6 +108,7 @@ class MexanydPage extends StatelessWidget {
     );
   }
 
+  /// Builds the actions for the side menu.
   Widget _buildActions(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(5),
@@ -106,12 +119,21 @@ class MexanydPage extends StatelessWidget {
   }
 }
 
+/// A button that can be used in the side menu of a [MexanydPage].
 class MexanydPageButton extends StatelessWidget {
+  /// The first text of the button.
   final String text1;
+
+  /// The second text of the button.
   final String? text2;
+
+  /// The icon of the button.
   final IconData icon;
+
+  /// The function that is called when the button is pressed.
   final void Function()? onPressed;
 
+  /// Creates a new [MexanydPageButton].
   const MexanydPageButton({
     super.key,
     required this.text1,
@@ -120,6 +142,7 @@ class MexanydPageButton extends StatelessWidget {
     this.text2,
   });
 
+  /// Creates a copy of the button that is disabled.
   static MexanydPageButton copyDisabled(MexanydPageButton button) {
     return MexanydPageButton(
       text1: button.text1,
@@ -150,6 +173,7 @@ class MexanydPageButton extends StatelessWidget {
     );
   }
 
+  /// Builds the text of the button.
   Widget _buildText(BuildContext context) {
     if (text2 == null) {
       return Text(text1, style: const TextStyle(fontSize: 12));
@@ -164,6 +188,7 @@ class MexanydPageButton extends StatelessWidget {
     }
   }
 
+  /// Builds the icon of the button.
   Widget _buildIcon(BuildContext context) {
     if (text2 == null) {
       return Icon(icon, size: 32);
@@ -172,6 +197,7 @@ class MexanydPageButton extends StatelessWidget {
     }
   }
 
+  /// Generates the style of the button.
   ButtonStyle _generateStyle(BuildContext context) {
     return TextButton.styleFrom(
       disabledBackgroundColor: Theme.of(context).colorScheme.primary,
@@ -183,11 +209,18 @@ class MexanydPageButton extends StatelessWidget {
   }
 }
 
+/// Window button that can be used in the header of a [MexanydPage].
 class WindowButton extends StatelessWidget {
+  /// The function that is called when the button is pressed.
   final void Function()? onPressed;
+
+  /// The icon of the button.
   final Widget icon;
+
+  /// Whether the button is a danger button.
   final bool danger;
 
+  /// Creates a new [WindowButton].
   const WindowButton({
     super.key,
     required this.onPressed,
@@ -210,15 +243,19 @@ class WindowButton extends StatelessWidget {
   }
 }
 
+/// Button that can be used to maximize or unmaximize the window.
 class MaximizeButton extends StatefulWidget {
+  /// The color of the button when hovered.
   final Color? hoverColor;
 
+  /// Creates a new [MaximizeButton].
   const MaximizeButton({super.key, this.hoverColor});
 
   @override
   State<MaximizeButton> createState() => _MaximizeButtonState();
 }
 
+/// State of the [MaximizeButton].
 class _MaximizeButtonState extends State<MaximizeButton> with WindowListener {
   @override
   Widget build(BuildContext context) {
