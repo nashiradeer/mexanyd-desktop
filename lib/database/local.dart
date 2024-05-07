@@ -29,6 +29,16 @@ class LocalDatabase extends IDatabase {
       )
     ''');
 
+    await database.execute('''
+      CREATE TABLE IF NOT EXISTS vehicle (
+        id INTEGER PRIMARY KEY,
+        brand TEXT NOT NULL DEFAULT '',
+        model TEXT NOT NULL DEFAULT '',
+        motor TEXT NOT NULL DEFAULT '',
+        creation TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      )
+    ''');
+
     return LocalDatabase._(dbPath, database);
   }
 
@@ -207,6 +217,49 @@ class LocalDatabase extends IDatabase {
               );
               return map;
             }));
+  }
+
+  @override
+  Future<void> insertVehicle(String brand, String model, String motor) async {
+    await _database.insert("vehicle", {
+      "brand": brand,
+      "model": model,
+      "motor": motor,
+    });
+  }
+
+  @override
+  Future<void> deleteVehicle(int id) async {
+    await _database.delete("vehicle", where: "id = ?", whereArgs: [id]);
+  }
+
+  @override
+  Future<List<Vehicle>> listVehicle({int limit = 50, int offset = 0}) {
+    return _database
+        .query(
+          "vehicle",
+          columns: ["id", "brand", "model", "motor", "creation"],
+          limit: limit,
+          offset: offset,
+          orderBy: "creation DESC",
+        )
+        .then((rows) => rows
+            .map((item) => Vehicle(
+                  item['id'] as int,
+                  item['brand'] as String,
+                  item['model'] as String,
+                  item['motor'] as String,
+                  creation: DateTime.parse(item['creation'] as String),
+                ))
+            .toList());
+  }
+
+  @override
+  Future<int> countVehicle() {
+    return _database.query(
+      "vehicle",
+      columns: ["COUNT(*)"],
+    ).then((rows) => rows.first.values.first as int);
   }
 
   /// Checks if the value is an integer or a double and returns a double.
