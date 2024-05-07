@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/main.dart';
+import 'package:mexanyd_desktop/widgets/paginator.dart';
 
 /// Controller for the [InOut] list.
 class InOutController extends ChangeNotifier {
@@ -54,21 +55,6 @@ class InOutController extends ChangeNotifier {
   }
 }
 
-/// Union of [InOut] and [InOutStats].
-class _InOutData {
-  /// List of [InOut]s.
-  final List<InOut> data;
-
-  /// Number of pages.
-  final int pageCount;
-
-  /// The sum of all values of the [InOut]s.
-  final double totalValue;
-
-  /// Creates a new [_InOutData].
-  const _InOutData(this.data, this.pageCount, this.totalValue);
-}
-
 /// List of [InOut]s.
 class InOutList extends StatefulWidget {
   /// Controller for the list.
@@ -96,12 +82,6 @@ class InOutList extends StatefulWidget {
 
 /// State of the [InOutList].
 class _InOutListState extends State<InOutList> {
-  /// Current page.
-  int page = 0;
-
-  /// Number of pages.
-  int pageCount = 0;
-
   @override
   void initState() {
     super.initState();
@@ -119,155 +99,32 @@ class _InOutListState extends State<InOutList> {
     setState(() {});
   }
 
-  /// Goes to the next page.
-  void _nextPage() {
-    if (page < pageCount - 1) {
-      setState(() {
-        page++;
-      });
-    }
-  }
-
-  /// Goes to the previous page.
-  void _prevPage() {
-    if (page > 0) {
-      setState(() {
-        page--;
-      });
-    }
-  }
-
-  /// Fetches the data.
-  Future<_InOutData> _fetchData() async {
+  @override
+  Widget build(BuildContext context) {
     final year = widget.controller.year;
     final month = widget.controller.month;
     final day = widget.controller.day;
 
-    final stats = await globalDatabase.statsInOut(year, month, day: day);
-    final pageCount = (stats.count / widget.itemPerPage).ceil();
-    final data = await globalDatabase.listInOut(year, month,
-        day: day,
-        limit: widget.itemPerPage,
-        offset: page * widget.itemPerPage,
-        reversed: widget.reversed);
-
-    return _InOutData(data, pageCount, stats.total);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _fetchData(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final data = snapshot.data as _InOutData;
-
-            if (data.data.isEmpty) {
-              return _buildEmpty();
-            }
-
-            if (data.pageCount != pageCount) {
-              page = 0;
-              pageCount = data.pageCount;
-            }
-
-            return _buildList(data);
-          } else if (snapshot.hasError) {
-            return _buildError(snapshot.error.toString());
-          }
-
-          return _buildLoading();
-        });
-  }
-
-  /// Builds the loading widget.
-  Widget _buildLoading() {
-    return const Expanded(
-      child: Center(
-        child: SizedBox.square(
-          dimension: 80,
-          child: CircularProgressIndicator(
-            strokeWidth: 15,
-            strokeCap: StrokeCap.round,
-            strokeAlign: -1,
-          ),
-        ),
+    return Paginator<InOut, double>(
+      itemBuilder: (context, item) =>
+          _InOutItem(item, widget.controller, widget.deleteButton),
+      headerBuilder: (context, header) => Text(
+        AppLocalizations.of(context)!
+            .totalMoney((header ?? 0).toStringAsFixed(2)),
+        style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
       ),
-    );
-  }
-
-  /// Builds the error widget.
-  Widget _buildError(String message) {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.error, size: 100, color: Colors.red),
-          Text(
-            AppLocalizations.of(context)!.error,
-            style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-          Text(message),
-          const SizedBox(height: 50),
-        ],
-      ),
-    );
-  }
-
-  /// Builds the widget when there is no data.
-  Widget _buildEmpty() {
-    return Expanded(
-      child: Center(
-        child: Text(
-          AppLocalizations.of(context)!.noDataFound,
-          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-
-  /// Builds the list widget.
-  Widget _buildList(_InOutData data) {
-    return Expanded(
-      child: Column(
-        children: [
-          _buildPaginator(data.totalValue),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: data.data.length,
-              itemBuilder: (context, index) {
-                final inOut = data.data[index];
-                return _InOutItem(
-                    inOut, widget.controller, widget.deleteButton);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Builds the paginator widget.
-  Widget _buildPaginator(double totalValue) {
-    return Row(
-      children: [
-        Text(
-          AppLocalizations.of(context)!
-              .totalMoney(totalValue.toStringAsFixed(2)),
-          style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        const Spacer(),
-        IconButton(
-          onPressed: (page > 0) ? _prevPage : null,
-          icon: const Icon(Icons.arrow_back_ios_rounded),
-        ),
-        Text("${page + 1}/$pageCount"),
-        IconButton(
-          onPressed: (page < pageCount - 1) ? _nextPage : null,
-          icon: const Icon(Icons.arrow_forward_ios_rounded),
-        ),
-      ],
+      fetcher: (params) => globalDatabase.listInOut(year, month,
+          day: day,
+          limit: params.pageSize,
+          offset: params.offset,
+          reversed: widget.reversed),
+      prefetch: (context) async {
+        final stats = await globalDatabase.statsInOut(year, month, day: day);
+        return PaginatorPrefetchData(
+          stats.count,
+          header: stats.total,
+        );
+      },
     );
   }
 }
