@@ -1,18 +1,19 @@
 {
-    "cSpell.words": [
-        "APPDATA",
-        "appimage",
-        "datetime",
-        "fullscreen",
-        "inout",
-        "linux",
-        "localtime",
-        "LTRB",
-        "mexanyd",
-        "prefs",
-        "sqflite",
-        "strftime",
-        "unfocus",
-        "unmaximize"
-    ]
+  "cSpell.words": [
+    "APPDATA",
+    "appimage",
+    "datetime",
+    "fullscreen",
+    "inout",
+    "linux",
+    "localtime",
+    "LTRB",
+    "mexanyd",
+    "prefs",
+    "sidemenu",
+    "sqflite",
+    "strftime",
+    "unfocus",
+    "unmaximize"
+  ]
 }
