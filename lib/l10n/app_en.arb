@@ -44,5 +44,6 @@
     },
     "config": "Config.",
     "fullConfig": "Configuration",
-    "language": "Language"
+    "language": "Language",
+    "vehicle": "Vehicle"
 }

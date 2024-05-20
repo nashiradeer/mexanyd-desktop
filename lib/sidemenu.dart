@@ -25,6 +25,12 @@ class SideMenu {
         icon: Icons.list_alt_rounded,
         onPressed: () => Navigator.popAndPushNamed(context, "/inout/list"),
       ),
+      const SizedBox(height: 5),
+      MexanydPageButton(
+        text1: AppLocalizations.of(context)!.vehicle,
+        icon: Icons.directions_car_rounded,
+        onPressed: () => Navigator.popAndPushNamed(context, "/vehicle"),
+      ),
       const Spacer(),
       MexanydPageButton(
         text1: AppLocalizations.of(context)!.config,
@@ -57,6 +63,11 @@ class SideMenu {
   /// Disables the list button.
   List<Widget> disableList() {
     return _buildSideMenu(2);
+  }
+
+  /// Disables the vehicle button.
+  List<Widget> disableVehicle() {
+    return _buildSideMenu(4);
   }
 
   /// Disables the configuration button.

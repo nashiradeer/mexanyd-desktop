@@ -11,6 +11,7 @@ import 'package:mexanyd_desktop/database/local.dart';
 import 'package:mexanyd_desktop/inout/input.dart';
 import 'package:mexanyd_desktop/inout/list.dart';
 import 'package:mexanyd_desktop/theme.dart';
+import 'package:mexanyd_desktop/vehicle.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
@@ -207,6 +208,8 @@ class _AppState extends State<App> {
         return _pageRouteBuilder(const InOutListPage());
       case '/config':
         return _pageRouteBuilder(const ConfigurationPage());
+      case '/vehicle':
+        return _pageRouteBuilder(const VehiclePage());
       default:
         return _pageRouteBuilder(const InOutInputPage());
     }

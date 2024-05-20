@@ -27,5 +27,6 @@
     "page": "Página {current} de {total}",
     "config": "Config.",
     "fullConfig": "Configurações",
-    "language": "Idioma"
+    "language": "Idioma",
+    "vehicle": "Veículo"
 }
