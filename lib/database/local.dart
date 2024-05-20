@@ -34,7 +34,7 @@ class LocalDatabase extends IDatabase {
         id INTEGER PRIMARY KEY,
         brand TEXT NOT NULL DEFAULT '',
         model TEXT NOT NULL DEFAULT '',
-        motor TEXT NOT NULL DEFAULT '',
+        variant TEXT NOT NULL DEFAULT '',
         creation TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
       )
     ''');
@@ -220,11 +220,11 @@ class LocalDatabase extends IDatabase {
   }
 
   @override
-  Future<void> insertVehicle(String brand, String model, String motor) async {
+  Future<void> insertVehicle(String brand, String model, String variant) async {
     await _database.insert("vehicle", {
       "brand": brand,
       "model": model,
-      "motor": motor,
+      "variant": variant,
     });
   }
 
@@ -238,7 +238,7 @@ class LocalDatabase extends IDatabase {
     return _database
         .query(
           "vehicle",
-          columns: ["id", "brand", "model", "motor", "creation"],
+          columns: ["id", "brand", "model", "variant", "creation"],
           limit: limit,
           offset: offset,
           orderBy: "creation DESC",
@@ -248,7 +248,7 @@ class LocalDatabase extends IDatabase {
                   item['id'] as int,
                   item['brand'] as String,
                   item['model'] as String,
-                  item['motor'] as String,
+                  item['variant'] as String,
                   creation: DateTime.parse(item['creation'] as String),
                 ))
             .toList());

@@ -32,8 +32,8 @@ abstract class IDatabase {
   /// Gets the total value of in/outs by day.
   Future<Map<int, InOutDayTotal>> totalInOutByDay(int year, int month);
 
-  /// Inserts a new vehicle with the given [brand], [model] and [motor].
-  Future<void> insertVehicle(String brand, String model, String motor);
+  /// Inserts a new vehicle with the given [brand], [model] and [variant].
+  Future<void> insertVehicle(String brand, String model, String variant);
 
   /// Deletes the vehicle with the given [id].
   Future<void> deleteVehicle(int id);
@@ -144,12 +144,12 @@ class Vehicle {
   final String brand;
   // The model of the vehicle.
   final String model;
-  // The motor of the vehicle.
-  final String motor;
+  // The variant of the vehicle.
+  final String variant;
   // The creation date of this database entry.
   final DateTime creation;
 
   /// Creates a new vehicle.
-  Vehicle(this.id, this.brand, this.model, this.motor, {DateTime? creation})
+  Vehicle(this.id, this.brand, this.model, this.variant, {DateTime? creation})
       : creation = creation ?? DateTime.now();
 }
