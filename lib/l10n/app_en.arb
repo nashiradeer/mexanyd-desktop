@@ -45,5 +45,8 @@
     "config": "Config.",
     "fullConfig": "Configuration",
     "language": "Language",
-    "vehicle": "Vehicle"
+    "vehicle": "Vehicle",
+    "brand": "Brand",
+    "model": "Model",
+    "variant": "Variant"
 }

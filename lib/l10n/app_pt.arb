@@ -28,5 +28,8 @@
     "config": "Config.",
     "fullConfig": "Configurações",
     "language": "Idioma",
-    "vehicle": "Veículo"
+    "vehicle": "Veículo",
+    "brand": "Marca",
+    "model": "Modelo",
+    "variant": "Versão"
 }
