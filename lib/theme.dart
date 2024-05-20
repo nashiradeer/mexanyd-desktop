@@ -38,3 +38,10 @@ ThemeData darkTheme() {
     ),
   );
 }
+
+/// Returns the border for the text field.
+InputBorder textFieldBorder(BuildContext context) {
+  return OutlineInputBorder(
+    borderRadius: BorderRadius.circular(20),
+  );
+}
