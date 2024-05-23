@@ -234,7 +234,13 @@ class LocalDatabase extends IDatabase {
   }
 
   @override
-  Future<List<Vehicle>> listVehicle({int limit = 50, int offset = 0}) {
+  Future<List<Vehicle>> listVehicle({
+    String? brand,
+    String? model,
+    String? variant,
+    int limit = 50,
+    int offset = 0,
+  }) {
     return _database
         .query(
           "vehicle",
@@ -242,6 +248,16 @@ class LocalDatabase extends IDatabase {
           limit: limit,
           offset: offset,
           orderBy: "creation DESC",
+          where: [
+            if (brand != null) "brand LIKE ? COLLATE NOCASE",
+            if (model != null) "model LIKE ? COLLATE NOCASE",
+            if (variant != null) "variant LIKE ? COLLATE NOCASE",
+          ].join(" AND "),
+          whereArgs: [
+            if (brand != null) '%$brand%',
+            if (model != null) '%$model%',
+            if (variant != null) '%$variant%',
+          ],
         )
         .then((rows) => rows
             .map((item) => Vehicle(

@@ -39,7 +39,13 @@ abstract class IDatabase {
   Future<void> deleteVehicle(int id);
 
   /// Lists the vehicles.
-  Future<List<Vehicle>> listVehicle({int limit = 50, int offset = 0});
+  Future<List<Vehicle>> listVehicle({
+    String? brand,
+    String? model,
+    String? variant,
+    int limit = 50,
+    int offset = 0,
+  });
 
   /// Gets the total count of vehicles.
   Future<int> countVehicle();
