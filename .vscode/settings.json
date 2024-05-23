@@ -9,6 +9,7 @@
     "localtime",
     "LTRB",
     "mexanyd",
+    "NOCASE",
     "prefs",
     "sidemenu",
     "sqflite",
