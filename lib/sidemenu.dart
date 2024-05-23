@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
@@ -32,6 +33,14 @@ class SideMenu {
         onPressed: () => Navigator.popAndPushNamed(context, "/vehicle"),
       ),
       const Spacer(),
+      if (kDebugMode) ...[
+        MexanydPageButton(
+          text1: "Debug",
+          icon: Icons.bug_report_rounded,
+          onPressed: () => Navigator.popAndPushNamed(context, "/debug"),
+        ),
+        const SizedBox(height: 5),
+      ],
       MexanydPageButton(
         text1: AppLocalizations.of(context)!.config,
         icon: Icons.settings_rounded,
@@ -73,5 +82,15 @@ class SideMenu {
   /// Disables the configuration button.
   List<Widget> disableConfig() {
     return _buildSideMenu(_items.length - 1);
+  }
+
+  /// Disables the debug button.
+  /// This method is only available in debug mode.
+  List<Widget> disableDebug() {
+    if (kDebugMode) {
+      return _buildSideMenu(_items.length - 3);
+    } else {
+      return _items;
+    }
   }
 }
