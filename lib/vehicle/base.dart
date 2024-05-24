@@ -47,19 +47,23 @@ class VehicleBase extends StatefulWidget {
 /// The state of the vehicle base.
 class _VehicleState extends State<VehicleBase> {
   /// The controller for the brand text field.
-  TextEditingController brandController = TextEditingController();
+  final TextEditingController _brandController = TextEditingController();
 
   /// The controller for the model text field.
-  TextEditingController modelController = TextEditingController();
+  final TextEditingController _modelController = TextEditingController();
 
   /// The controller for the variant text field.
-  TextEditingController variantController = TextEditingController();
+  final TextEditingController _variantController = TextEditingController();
+
+  bool _brandError = false;
+  bool _modelError = false;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Flexible(
               flex: 1,
@@ -67,10 +71,13 @@ class _VehicleState extends State<VehicleBase> {
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z 0-9]'))
                 ],
-                controller: brandController,
+                controller: _brandController,
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.brand,
                   border: textFieldBorder(context),
+                  errorText: _brandError
+                      ? AppLocalizations.of(context)!.requiredField
+                      : null,
                 ),
                 onEditingComplete: () {
                   FocusScope.of(context).nextFocus();
@@ -89,10 +96,13 @@ class _VehicleState extends State<VehicleBase> {
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z 0-9,\.]'))
                 ],
-                controller: modelController,
+                controller: _modelController,
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.model,
                   border: textFieldBorder(context),
+                  errorText: _modelError
+                      ? AppLocalizations.of(context)!.requiredField
+                      : null,
                 ),
                 onEditingComplete: () {
                   FocusScope.of(context).nextFocus();
@@ -111,7 +121,7 @@ class _VehicleState extends State<VehicleBase> {
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z 0-9,\.]'))
                 ],
-                controller: variantController,
+                controller: _variantController,
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.variant,
                   border: textFieldBorder(context),
@@ -127,24 +137,20 @@ class _VehicleState extends State<VehicleBase> {
               ),
             ),
             const SizedBox(width: 5),
-            SizedBox(
-              width: 120,
-              child: MexanydIconButton(
-                borderRadius: 15,
-                size: 40,
-                data: [
-                  MexanydIconButtonData(
-                    icon: Icons.search_rounded,
-                    onPressed: _reload,
-                  ),
-                  MexanydIconButtonData(
-                    icon: Icons.add_rounded,
-                    onPressed: _add,
-                    backgroundColor: Colors.green,
-                  ),
-                ],
-              ),
+            MexanydIconButton.fixedWidth(
+              [
+                MexanydIconButtonData(
+                  icon: Icons.search_rounded,
+                  onPressed: _reload,
+                ),
+                MexanydIconButtonData(
+                  icon: Icons.add_rounded,
+                  onPressed: _add,
+                  backgroundColor: Colors.green,
+                ),
+              ],
             ),
+            const SizedBox(width: 10),
           ],
         ),
         const SizedBox(height: 5),
@@ -164,9 +170,9 @@ class _VehicleState extends State<VehicleBase> {
             return globalDatabase.listVehicle(
               limit: params.pageSize,
               offset: params.offset,
-              brand: brandController.text,
-              model: modelController.text,
-              variant: variantController.text,
+              brand: _brandController.text,
+              model: _modelController.text,
+              variant: _variantController.text,
             );
           },
           prefetch: (context) {
@@ -181,30 +187,41 @@ class _VehicleState extends State<VehicleBase> {
 
   /// Reloads the vehicle list.
   void _reload() {
-    setState(() {});
+    setState(() {
+      _brandError = false;
+      _modelError = false;
+    });
   }
 
   /// Adds a new vehicle from the text fields.
   void _add() {
-    globalDatabase
-        .insertVehicle(
-      brandController.text,
-      modelController.text,
-      variantController.text,
-    )
-        .then((_) {
-      brandController.clear();
-      modelController.clear();
-      variantController.clear();
-      setState(() {});
+    final brand = _brandController.text;
+    final model = _modelController.text;
+    final variant = _variantController.text;
+
+    if (brand.isEmpty || model.isEmpty) {
+      setState(() {
+        _brandError = brand.isEmpty;
+        _modelError = model.isEmpty;
+      });
+      return;
+    }
+
+    globalDatabase.insertVehicle(brand, model, variant).then((_) {
+      setState(() {
+        _brandController.clear();
+        _modelController.clear();
+        _variantController.clear();
+
+        _brandError = false;
+        _modelError = false;
+      });
     });
   }
 
   /// Deletes a vehicle using its ID.
   void _delete(Vehicle vehicle) {
-    globalDatabase.deleteVehicle(vehicle.id).then((_) {
-      setState(() {});
-    });
+    globalDatabase.deleteVehicle(vehicle.id).then((_) => _reload());
   }
 }
 

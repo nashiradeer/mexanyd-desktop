@@ -31,5 +31,6 @@
     "vehicle": "Veículo",
     "brand": "Marca",
     "model": "Modelo",
-    "variant": "Versão"
+    "variant": "Versão",
+    "requiredField": "Campo obrigatório"
 }

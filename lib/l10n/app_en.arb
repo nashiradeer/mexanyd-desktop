@@ -48,5 +48,6 @@
     "vehicle": "Vehicle",
     "brand": "Brand",
     "model": "Model",
-    "variant": "Variant"
+    "variant": "Variant",
+    "requiredField": "Required field"
 }
