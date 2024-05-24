@@ -4,6 +4,7 @@
 
 ### Added
 
+- Create a Debug page to test widgets.
 - Create the Vehicle page.
 - Create the Vehicle selection dialog.
 
