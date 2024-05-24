@@ -252,9 +252,16 @@ class MexanydIconButton extends StatelessWidget {
   const MexanydIconButton({
     super.key,
     required this.data,
-    this.size = 30,
-    this.borderRadius = 10,
+    this.size = 34,
+    this.borderRadius = 18,
   });
+
+  static Widget fixedWidth(List<MexanydIconButtonData> data) {
+    return SizedBox(
+      width: data.length * 50.0,
+      child: MexanydIconButton(data: data),
+    );
+  }
 
   /// Get the background color of the icon button, default to primary color.
   Color _backgroundColor(Color? color, BuildContext context) {
