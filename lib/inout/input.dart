@@ -50,13 +50,16 @@ class _InOutInputState extends State<InOutInputPage> {
               const EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 10),
           child: Column(
             children: [
-              MexanydIconRadio(
-                icons: const [
-                  Icons.money_rounded,
-                  Icons.credit_card_rounded,
-                  Icons.alarm_rounded,
-                ],
-                controller: _mexanydRadioController,
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: MexanydIconRadio(
+                  icons: const [
+                    Icons.money_rounded,
+                    Icons.credit_card_rounded,
+                    Icons.alarm_rounded,
+                  ],
+                  controller: _mexanydRadioController,
+                ),
               ),
               const SizedBox(height: 10),
               // TextFields
@@ -123,33 +126,29 @@ class _InOutInputState extends State<InOutInputPage> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  SizedBox(
-                    width: 120,
-                    child: MexanydIconButton(
-                      borderRadius: 15,
-                      size: 40,
-                      data: [
-                        MexanydIconButtonData(
-                          icon: Icons.add_rounded,
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                          onPressed: () {
-                            _save();
-                            FocusScope.of(context).requestFocus(_valueFocus);
-                          },
-                        ),
-                        MexanydIconButtonData(
-                          icon: Icons.remove_rounded,
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          onPressed: () {
-                            _save(invert: true);
-                            FocusScope.of(context).requestFocus(_valueFocus);
-                          },
-                        ),
-                      ],
-                    ),
+                  MexanydIconButton.fixedWidth(
+                    [
+                      MexanydIconButtonData(
+                        icon: Icons.add_rounded,
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        onPressed: () {
+                          _save();
+                          FocusScope.of(context).requestFocus(_valueFocus);
+                        },
+                      ),
+                      MexanydIconButtonData(
+                        icon: Icons.remove_rounded,
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        onPressed: () {
+                          _save(invert: true);
+                          FocusScope.of(context).requestFocus(_valueFocus);
+                        },
+                      ),
+                    ],
                   ),
+                  const SizedBox(width: 10),
                 ],
               ),
               const SizedBox(height: 10),
