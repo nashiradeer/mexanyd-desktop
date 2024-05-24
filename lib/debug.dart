@@ -4,7 +4,7 @@ import 'package:mexanyd_desktop/vehicle/base.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
 class DebugPage extends StatefulWidget {
-  const DebugPage({Key? key}) : super(key: key);
+  const DebugPage({super.key});
 
   @override
   State<DebugPage> createState() => _DebugPageState();
