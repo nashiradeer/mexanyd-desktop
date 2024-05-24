@@ -4,7 +4,9 @@ import 'package:mexanyd_desktop/sidemenu.dart';
 import 'package:mexanyd_desktop/vehicle/base.dart';
 import 'package:mexanyd_desktop/widgets/page.dart';
 
+/// The [VehicleBase] widget wrapped in a [MexanydPage] for use in the main app.
 class VehiclePage extends StatelessWidget {
+  /// Creates a new vehicle page.
   const VehiclePage({super.key});
 
   @override

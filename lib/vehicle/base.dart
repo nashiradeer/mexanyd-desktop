@@ -6,9 +6,12 @@ import 'package:mexanyd_desktop/theme.dart';
 import 'package:mexanyd_desktop/widgets/buttons.dart';
 import 'package:mexanyd_desktop/widgets/paginator.dart';
 
+/// A base class for vehicle selection.
 class VehicleBase extends StatefulWidget {
+  /// The function to call when a vehicle is selected. If null, the delete button is shown.
   final void Function(BuildContext, Vehicle)? onSelect;
 
+  /// Creates a new vehicle base.
   const VehicleBase({super.key, this.onSelect});
 
   /// Selects a vehicle from a dialog.
@@ -23,6 +26,7 @@ class VehicleBase extends StatefulWidget {
     );
   }
 
+  /// Creates a dialog for selecting a vehicle.
   static Widget selectDialog(
       BuildContext context, void Function(BuildContext, Vehicle) onSelect) {
     return Dialog(
@@ -40,9 +44,15 @@ class VehicleBase extends StatefulWidget {
   State<VehicleBase> createState() => _VehicleState();
 }
 
+/// The state of the vehicle base.
 class _VehicleState extends State<VehicleBase> {
+  /// The controller for the brand text field.
   TextEditingController brandController = TextEditingController();
+
+  /// The controller for the model text field.
   TextEditingController modelController = TextEditingController();
+
+  /// The controller for the variant text field.
   TextEditingController variantController = TextEditingController();
 
   @override
@@ -169,10 +179,12 @@ class _VehicleState extends State<VehicleBase> {
     );
   }
 
+  /// Reloads the vehicle list.
   void _reload() {
     setState(() {});
   }
 
+  /// Adds a new vehicle from the text fields.
   void _add() {
     globalDatabase
         .insertVehicle(
@@ -188,6 +200,7 @@ class _VehicleState extends State<VehicleBase> {
     });
   }
 
+  /// Deletes a vehicle using its ID.
   void _delete(Vehicle vehicle) {
     globalDatabase.deleteVehicle(vehicle.id).then((_) {
       setState(() {});
@@ -195,11 +208,18 @@ class _VehicleState extends State<VehicleBase> {
   }
 }
 
+/// A widget that displays a single vehicle.
 class _VehicleItem extends StatelessWidget {
+  /// The vehicle to display.
   final Vehicle vehicle;
+
+  /// The icon to display on the button.
   final Icon buttonIcon;
+
+  /// The function to call when the button is clicked.
   final void Function(Vehicle) onClick;
 
+  /// Creates a new vehicle item.
   const _VehicleItem({
     required this.vehicle,
     required this.buttonIcon,
