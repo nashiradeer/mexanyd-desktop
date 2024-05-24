@@ -26,13 +26,13 @@ ThemeData darkTheme() {
 
   return baseTheme.copyWith(
     primaryColor: Colors.blue,
+    dialogBackgroundColor: Colors.black,
+    scaffoldBackgroundColor: Colors.black,
     colorScheme: baseTheme.colorScheme.copyWith(
       primary: Colors.blue,
-      background: Colors.black,
-      surface: Colors.transparent,
-      surfaceVariant: Colors.grey[900],
+      surface: Colors.black,
+      surfaceContainerHighest: Colors.grey[900],
       onPrimary: Colors.white,
-      onBackground: Colors.white,
       onSurface: Colors.white,
       onSurfaceVariant: Colors.white,
     ),

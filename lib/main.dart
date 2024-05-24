@@ -255,10 +255,10 @@ class ErrorPage extends StatelessWidget {
             TextButton(
               onPressed: () => exit(1),
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.red),
-                foregroundColor: MaterialStateProperty.all(
+                backgroundColor: const WidgetStatePropertyAll(Colors.red),
+                foregroundColor: WidgetStatePropertyAll(
                     Theme.of(context).colorScheme.onPrimary),
-                fixedSize: MaterialStateProperty.all(const Size(200, 55)),
+                fixedSize: const WidgetStatePropertyAll(Size(200, 55)),
               ),
               child: Text(
                 AppLocalizations.of(context)!.close,

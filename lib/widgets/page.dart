@@ -22,7 +22,7 @@ class MexanydPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).colorScheme.background,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Column(
         children: [
           _buildHeader(context),
@@ -202,7 +202,7 @@ class MexanydPageButton extends StatelessWidget {
     return TextButton.styleFrom(
       disabledBackgroundColor: Theme.of(context).colorScheme.primary,
       disabledForegroundColor: Theme.of(context).colorScheme.onPrimary,
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       foregroundColor: Theme.of(context).colorScheme.primary,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     );
@@ -236,9 +236,9 @@ class WindowButton extends StatelessWidget {
         iconSize: 20,
         hoverColor: danger ? Colors.red : null,
         style: ButtonStyle(
-          iconColor: MaterialStateProperty.all(
-              Theme.of(context).colorScheme.onBackground),
-          shape: MaterialStateProperty.all(const ContinuousRectangleBorder()),
+          iconColor:
+              WidgetStatePropertyAll(Theme.of(context).colorScheme.onSurface),
+          shape: const WidgetStatePropertyAll(ContinuousRectangleBorder()),
         ));
   }
 }

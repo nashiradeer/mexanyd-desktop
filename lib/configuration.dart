@@ -68,7 +68,7 @@ class ConfigurationPage extends StatelessWidget {
               const SizedBox(height: 10),
               Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: DropdownButton(

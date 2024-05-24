@@ -97,7 +97,7 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
   /// Get the foreground color of the radio button.
   Color _foregroundColor(int index, BuildContext context) {
     return selectedIndex == index
-        ? widget.selectedColor ?? Theme.of(context).colorScheme.background
+        ? widget.selectedColor ?? Theme.of(context).colorScheme.onPrimary
         : widget.unselectedColor ?? Theme.of(context).colorScheme.primary;
   }
 
@@ -106,7 +106,7 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
     return selectedIndex == index
         ? widget.selectedColor ?? Theme.of(context).colorScheme.primary
         : widget.unselectedColor ??
-            Theme.of(context).colorScheme.surfaceVariant;
+            Theme.of(context).colorScheme.surfaceContainerHighest;
   }
 
   @override
@@ -122,7 +122,7 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
             icon: Icon(widget.icons.first),
             iconSize: widget.size,
             style: ButtonStyle(
-              shape: MaterialStateProperty.all(
+              shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(widget.borderRadius),
@@ -131,7 +131,7 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
                 ),
               ),
               backgroundColor:
-                  MaterialStateProperty.all(_backgroundColor(0, context)),
+                  WidgetStatePropertyAll(_backgroundColor(0, context)),
             ),
             color: _foregroundColor(0, context),
             onPressed: () {
@@ -156,10 +156,9 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
               icon: Icon(icon),
               iconSize: widget.size,
               style: ButtonStyle(
-                shape:
-                    MaterialStateProperty.all(const RoundedRectangleBorder()),
+                shape: const WidgetStatePropertyAll(RoundedRectangleBorder()),
                 backgroundColor:
-                    MaterialStateProperty.all(_backgroundColor(index, context)),
+                    WidgetStatePropertyAll(_backgroundColor(index, context)),
               ),
               color: _foregroundColor(index, context),
               onPressed: () {
@@ -183,7 +182,7 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
             icon: Icon(widget.icons.last),
             iconSize: widget.size,
             style: ButtonStyle(
-              shape: MaterialStateProperty.all(
+              shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(widget.borderRadius),
@@ -191,7 +190,7 @@ class _MexanydIconRadioState extends State<MexanydIconRadio> {
                   ),
                 ),
               ),
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStatePropertyAll(
                   _backgroundColor(widget.icons.length - 1, context)),
             ),
             color: _foregroundColor(widget.icons.length - 1, context),
@@ -264,7 +263,7 @@ class MexanydIconButton extends StatelessWidget {
 
   /// Get the foreground color of the icon button, default to background color.
   Color _foregroundColor(Color? color, BuildContext context) {
-    return color ?? Theme.of(context).colorScheme.background;
+    return color ?? Theme.of(context).colorScheme.onPrimary;
   }
 
   @override
@@ -280,7 +279,7 @@ class MexanydIconButton extends StatelessWidget {
             icon: Icon(data.first.icon),
             iconSize: size,
             style: ButtonStyle(
-              shape: MaterialStateProperty.all(
+              shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(borderRadius),
@@ -288,7 +287,7 @@ class MexanydIconButton extends StatelessWidget {
                   ),
                 ),
               ),
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStatePropertyAll(
                   _backgroundColor(data.first.backgroundColor, context)),
             ),
             color: _foregroundColor(data.first.foregroundColor, context),
@@ -301,9 +300,8 @@ class MexanydIconButton extends StatelessWidget {
               icon: Icon(d.icon),
               iconSize: size,
               style: ButtonStyle(
-                shape:
-                    MaterialStateProperty.all(const RoundedRectangleBorder()),
-                backgroundColor: MaterialStateProperty.all(
+                shape: const WidgetStatePropertyAll(RoundedRectangleBorder()),
+                backgroundColor: WidgetStatePropertyAll(
                     _backgroundColor(d.backgroundColor, context)),
               ),
               color: _foregroundColor(d.foregroundColor, context),
@@ -316,7 +314,7 @@ class MexanydIconButton extends StatelessWidget {
             icon: Icon(data.last.icon),
             iconSize: size,
             style: ButtonStyle(
-              shape: MaterialStateProperty.all(
+              shape: WidgetStatePropertyAll(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(borderRadius),
@@ -324,7 +322,7 @@ class MexanydIconButton extends StatelessWidget {
                   ),
                 ),
               ),
-              backgroundColor: MaterialStateProperty.all(
+              backgroundColor: WidgetStatePropertyAll(
                   _backgroundColor(data.last.backgroundColor, context)),
             ),
             color: _foregroundColor(data.last.foregroundColor, context),

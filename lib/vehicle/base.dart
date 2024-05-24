@@ -211,7 +211,7 @@ class _VehicleItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(right: 20, bottom: 5, top: 5),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(10),
       ),
       child: ListTile(

@@ -209,15 +209,15 @@ class _InOutListState extends State<InOutListPage> {
                       }
                     },
                     style: ButtonStyle(
-                      shape: MaterialStateProperty.all(
+                      shape: WidgetStatePropertyAll(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
-                      backgroundColor: MaterialStateProperty.all(
+                      backgroundColor: WidgetStatePropertyAll(
                         Theme.of(context).colorScheme.primary,
                       ),
-                      foregroundColor: MaterialStateProperty.all(
+                      foregroundColor: WidgetStatePropertyAll(
                         Theme.of(context).colorScheme.onPrimary,
                       ),
                     ),
