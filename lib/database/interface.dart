@@ -159,3 +159,65 @@ class Vehicle {
   Vehicle(this.id, this.brand, this.model, this.variant, {DateTime? creation})
       : creation = creation ?? DateTime.now();
 }
+
+/// Represents a car service.
+class CarService {
+  /// The unique identifier of the car service.
+  final int id;
+
+  /// The vehicle identifier of the car service.
+  final int vehicleId;
+
+  /// The plate of the vehicle.
+  final String plate;
+
+  /// The color of the vehicle.
+  final String color;
+
+  /// The odometer value of the vehicle.
+  final int odometer;
+
+  /// The owner's name of the vehicle.
+  final String owner;
+
+  /// The service made to the vehicle.
+  final String service;
+
+  /// The value earned in the service.
+  final double value;
+
+  /// The creation date of this database entry.
+  final DateTime creation;
+
+  /// Creates a new car service.
+  CarService(this.id, this.vehicleId, this.plate, this.color, this.odometer,
+      this.owner, this.service, this.value,
+      {DateTime? creation})
+      : creation = creation ?? DateTime.now();
+}
+
+/// Represents a item used in a car service.
+class ServiceItem {
+  /// The unique identifier of the service item.
+  final int id;
+
+  /// The service identifier associated with this item.
+  final int serviceId;
+
+  /// The item was bought from other place.
+  final bool bought;
+
+  /// The name of the item.
+  final String name;
+
+  /// The price of the item.
+  final double price;
+
+  /// The creation date of this database entry.
+  final DateTime creation;
+
+  /// Creates a new service item.
+  ServiceItem(this.id, this.serviceId, this.bought, this.name, this.price,
+      {DateTime? creation})
+      : creation = creation ?? DateTime.now();
+}
