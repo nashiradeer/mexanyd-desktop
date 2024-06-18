@@ -49,6 +49,52 @@ abstract class IDatabase {
 
   /// Gets the total count of vehicles.
   Future<int> countVehicle();
+
+  /// Inserts a new car service with the given [vehicleId], [plate], [color], [odometer], [owner], [service] and [value], returning the created [CarService].
+  Future<CarService> createCarService(int vehicleId, String plate, String color,
+      int odometer, String owner, String service, double value);
+
+  /// Checks if a vehicle has a service.
+  Future<bool> hasServiceWithVehicle(int vehicleId);
+
+  /// Deletes the car service with the given [id].
+  Future<void> deleteCarService(int id);
+
+  /// Lists the car services.
+  Future<List<CarService>> listCarService({
+    int? vehicleId,
+    String? plate,
+    String? owner,
+    int limit = 50,
+    int offset = 0,
+  });
+
+  /// Gets the total count of car services.
+  Future<int> countCarService({int? vehicleId, String? plate, String? owner});
+
+  /// Bulk inserts a list of items used in a service with the given [serviceId].
+  Future<void> bulkInsertServiceItem(
+      int serviceId, List<BulkServiceItem> items);
+
+  /// Deletes a item from a service with the given [id].
+  Future<void> deleteServiceItem(int id);
+
+  /// Lists the items used in a service.
+  Future<List<ServiceItem>> listServiceItem(
+    int serviceId, {
+    bool? bought,
+    int limit = 50,
+    int offset = 0,
+  });
+
+  /// Gets the total count of items used in a service.
+  Future<int> countServiceItem(int serviceId, {bool? bought});
+
+  /// Gets the total value of items used in a service.
+  Future<int> totalServiceItem(int serviceId, {bool? bought});
+
+  /// Gets the statistics of the items used in a service.
+  Future<ServiceItemStats> statsServiceItem(int serviceId, {bool? bought});
 }
 
 /// Represents the statistics of in/outs.
@@ -224,4 +270,31 @@ class ServiceItem {
   ServiceItem(this.id, this.serviceId, this.bought, this.name, this.price,
       {DateTime? creation})
       : creation = creation ?? DateTime.now();
+}
+
+/// Single item to be used in bulk insert.
+class BulkServiceItem {
+  /// The item was bought from other place.
+  final bool bought;
+
+  /// The name of the item.
+  final String name;
+
+  /// The price of the item.
+  final double price;
+
+  /// Creates a new bulk service item.
+  const BulkServiceItem(this.bought, this.name, this.price);
+}
+
+/// Represents the statistics of a service item.
+class ServiceItemStats {
+  /// The total count of the service items.
+  final int count;
+
+  /// The total value of the service items.
+  final double total;
+
+  /// Creates a new service item statistics.
+  const ServiceItemStats(this.count, this.total);
 }
