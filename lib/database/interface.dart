@@ -146,13 +146,17 @@ class InOut {
 class Vehicle {
   /// The unique identifier of the vehicle.
   final int id;
-  // The brand of the vehicle.
+
+  /// The brand of the vehicle.
   final String brand;
-  // The model of the vehicle.
+
+  /// The model of the vehicle.
   final String model;
-  // The variant of the vehicle.
+
+  /// The variant of the vehicle.
   final String variant;
-  // The creation date of this database entry.
+
+  /// The creation date of this database entry.
   final DateTime creation;
 
   /// Creates a new vehicle.
