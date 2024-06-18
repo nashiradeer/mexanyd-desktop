@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/intl_standalone.dart';
 import 'package:intl/locale.dart' as intl_locale;
+import 'package:mexanyd_desktop/car_services/list.dart';
 import 'package:mexanyd_desktop/configuration.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/database/local.dart';
@@ -209,6 +210,8 @@ class _AppState extends State<App> {
         return _pageRouteBuilder(const InOutListPage());
       case '/config':
         return _pageRouteBuilder(const ConfigurationPage());
+      case '/services':
+        return _pageRouteBuilder(const CarServicesList());
       case '/vehicle':
         return _pageRouteBuilder(const VehiclePage());
       case '/debug':

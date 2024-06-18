@@ -176,7 +176,7 @@ class MexanydPageButton extends StatelessWidget {
   /// Builds the text of the button.
   Widget _buildText(BuildContext context) {
     if (text2 == null) {
-      return Text(text1, style: const TextStyle(fontSize: 12));
+      return Text(text1, style: const TextStyle(fontSize: 10));
     } else {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,

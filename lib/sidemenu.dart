@@ -28,6 +28,12 @@ class SideMenu {
       ),
       const SizedBox(height: 5),
       MexanydPageButton(
+        text1: AppLocalizations.of(context)!.services,
+        icon: Icons.home_repair_service_rounded,
+        onPressed: () => Navigator.popAndPushNamed(context, "/services"),
+      ),
+      const SizedBox(height: 5),
+      MexanydPageButton(
         text1: AppLocalizations.of(context)!.vehicle,
         icon: Icons.directions_car_rounded,
         onPressed: () => Navigator.popAndPushNamed(context, "/vehicle"),
@@ -74,9 +80,14 @@ class SideMenu {
     return _buildSideMenu(2);
   }
 
+  /// Disables the services button.
+  List<Widget> disableServices() {
+    return _buildSideMenu(4);
+  }
+
   /// Disables the vehicle button.
   List<Widget> disableVehicle() {
-    return _buildSideMenu(4);
+    return _buildSideMenu(6);
   }
 
   /// Disables the configuration button.
