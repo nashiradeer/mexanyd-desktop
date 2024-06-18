@@ -192,7 +192,7 @@ class _InOutListState extends State<InOutListPage> {
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.print_rounded),
-                    iconSize: 40,
+                    iconSize: 32,
                     onPressed: () {
                       if (_yearError || _monthError || _dayError) {
                         return;
@@ -211,7 +211,7 @@ class _InOutListState extends State<InOutListPage> {
                     style: ButtonStyle(
                       shape: WidgetStatePropertyAll(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                       ),
                       backgroundColor: WidgetStatePropertyAll(
