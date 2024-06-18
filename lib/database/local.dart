@@ -39,6 +39,33 @@ class LocalDatabase extends IDatabase {
       )
     ''');
 
+    await database.execute('''
+      CREATE TABLE IF NOT EXISTS car_service (
+        id INTEGER PRIMARY KEY,
+        vehicle_id INTEGER NOT NULL,
+        plate TEXT NOT NULL DEFAULT '',
+        color TEXT NOT NULL DEFAULT '',
+        odometer INTEGER NOT NULL DEFAULT 0,
+        owner TEXT NOT NULL DEFAULT '',
+        service TEXT NOT NULL DEFAULT '',
+        value REAL NOT NULL DEFAULT 0,
+        creation TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (vehicle_id) REFERENCES vehicle (id) ON DELETE RESTRICT ON UPDATE CASCADE
+      )
+    ''');
+
+    await database.execute('''
+      CREATE TABLE IF NOT EXISTS service_item (
+        id INTEGER PRIMARY KEY,
+        service_id INTEGER NOT NULL,
+        bought INTEGER NOT NULL,
+        name TEXT NOT NULL DEFAULT '',
+        price REAL NOT NULL DEFAULT 0,
+        creation TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (service_id) REFERENCES car_service (id) ON DELETE CASCADE ON UPDATE CASCADE
+      )
+    ''');
+
     return LocalDatabase._(dbPath, database);
   }
 
