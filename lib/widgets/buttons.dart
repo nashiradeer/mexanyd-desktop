@@ -252,7 +252,7 @@ class MexanydIconButton extends StatelessWidget {
   const MexanydIconButton({
     super.key,
     required this.data,
-    this.size = 34,
+    this.size = 32,
     this.borderRadius = 18,
   });
 
