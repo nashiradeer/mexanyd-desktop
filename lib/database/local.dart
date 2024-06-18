@@ -305,6 +305,237 @@ class LocalDatabase extends IDatabase {
     ).then((rows) => rows.first.values.first as int);
   }
 
+  @override
+  Future<CarService> createCarService(int vehicleId, String plate, String color,
+      int odometer, String owner, String service, double value) {
+    return _database.transaction((txn) async {
+      final id = await txn.insert("car_service", {
+        "vehicle_id": vehicleId,
+        "plate": plate,
+        "color": color,
+        "odometer": odometer,
+        "owner": owner,
+        "service": service,
+        "value": value,
+      });
+
+      final creation = await txn.query(
+        "car_service",
+        columns: ["creation"],
+        where: "id = ?",
+        whereArgs: [id],
+      );
+
+      return CarService(
+        id,
+        vehicleId,
+        plate,
+        color,
+        odometer,
+        owner,
+        service,
+        value,
+        creation: DateTime.parse(creation.first['creation'] as String),
+      );
+    });
+  }
+
+  @override
+  Future<void> deleteCarService(int id) async {
+    await _database.delete("car_service", where: "id = ?", whereArgs: [id]);
+  }
+
+  @override
+  Future<List<CarService>> listCarService(
+      {int? vehicleId,
+      String? plate,
+      String? owner,
+      int limit = 50,
+      int offset = 0}) {
+    return _database
+        .query(
+          "car_service",
+          columns: [
+            "id",
+            "vehicle_id",
+            "plate",
+            "color",
+            "odometer",
+            "owner",
+            "service",
+            "value",
+            "creation"
+          ],
+          limit: limit,
+          offset: offset,
+          orderBy: "creation DESC",
+          where: [
+            if (vehicleId != null) "vehicle_id = ?",
+            if (plate != null) "plate LIKE ? COLLATE NOCASE",
+            if (owner != null) "owner LIKE ? COLLATE NOCASE",
+          ].join(" AND "),
+          whereArgs: [
+            if (vehicleId != null) vehicleId,
+            if (plate != null) '%$plate%',
+            if (owner != null) '%$owner%',
+          ],
+        )
+        .then((rows) => rows
+            .map((item) => CarService(
+                  item['id'] as int,
+                  item['vehicle_id'] as int,
+                  item['plate'] as String,
+                  item['color'] as String,
+                  item['odometer'] as int,
+                  item['owner'] as String,
+                  item['service'] as String,
+                  item['value'] as double,
+                  creation: DateTime.parse(item['creation'] as String),
+                ))
+            .toList());
+  }
+
+  @override
+  Future<int> countCarService({int? vehicleId, String? plate, String? owner}) {
+    return _database
+        .query(
+          "car_service",
+          columns: ["COUNT(*)"],
+          where: [
+            if (vehicleId != null) "vehicle_id = ?",
+            if (plate != null) "plate LIKE ? COLLATE NOCASE",
+            if (owner != null) "owner LIKE ? COLLATE NOCASE",
+          ].join(" AND "),
+          whereArgs: [
+            if (vehicleId != null) vehicleId,
+            if (plate != null) '%$plate%',
+            if (owner != null) '%$owner%',
+          ],
+        )
+        .then((rows) => rows.first.values.first as int);
+  }
+
+  @override
+  Future<bool> hasServiceWithVehicle(int vehicleId) {
+    return _database
+        .query(
+          "car_service",
+          columns: ["COUNT(*)"],
+          where: "vehicle_id = ?",
+          whereArgs: [vehicleId],
+          limit: 1,
+        )
+        .then((rows) => rows.first.values.first as int > 0);
+  }
+
+  @override
+  Future<void> bulkInsertServiceItem(
+      int serviceId, List<BulkServiceItem> items) {
+    return _database.transaction((txn) async {
+      for (final item in items) {
+        await txn.insert("service_item", {
+          "service_id": serviceId,
+          "bought": item.bought,
+          "name": item.name,
+          "price": item.price,
+        });
+      }
+    });
+  }
+
+  @override
+  Future<void> deleteServiceItem(int id) {
+    return _database.delete("service_item", where: "id = ?", whereArgs: [id]);
+  }
+
+  @override
+  Future<List<ServiceItem>> listServiceItem(int serviceId,
+      {bool? bought, int limit = 50, int offset = 0}) {
+    return _database
+        .query(
+          "service_item",
+          columns: ["id", "service_id", "bought", "name", "price", "creation"],
+          limit: limit,
+          offset: offset,
+          orderBy: "creation DESC",
+          where: [
+            "service_id = ?",
+            if (bought != null) "bought = ?",
+          ].join(" AND "),
+          whereArgs: [
+            serviceId,
+            if (bought != null) bought ? 1 : 0,
+          ],
+        )
+        .then((rows) => rows
+            .map((item) => ServiceItem(
+                  item['id'] as int,
+                  item['service_id'] as int,
+                  item['bought'] as int == 1,
+                  item['name'] as String,
+                  item['price'] as double,
+                  creation: DateTime.parse(item['creation'] as String),
+                ))
+            .toList());
+  }
+
+  @override
+  Future<int> countServiceItem(int serviceId, {bool? bought}) {
+    return _database
+        .query(
+          "service_item",
+          columns: ["COUNT(*)"],
+          where: [
+            "service_id = ?",
+            if (bought != null) "bought = ?",
+          ].join(" AND "),
+          whereArgs: [
+            serviceId,
+            if (bought != null) bought ? 1 : 0,
+          ],
+        )
+        .then((rows) => rows.first.values.first as int);
+  }
+
+  @override
+  Future<double> totalServiceItem(int serviceId, {bool? bought}) {
+    return _database
+        .query(
+          "service_item",
+          columns: ["SUM(price)"],
+          where: [
+            "service_id = ?",
+            if (bought != null) "bought = ?",
+          ].join(" AND "),
+          whereArgs: [
+            serviceId,
+            if (bought != null) bought ? 1 : 0,
+          ],
+        )
+        .then((rows) => (rows.first.values.first ?? 0.0) as double);
+  }
+
+  @override
+  Future<ServiceItemStats> statsServiceItem(int serviceId, {bool? bought}) {
+    return _database
+        .query(
+          "service_item",
+          columns: ["COUNT(*)", "SUM(price)"],
+          where: [
+            "service_id = ?",
+            if (bought != null) "bought = ?",
+          ].join(" AND "),
+          whereArgs: [
+            serviceId,
+            if (bought != null) bought ? 1 : 0,
+          ],
+        )
+        .then((rows) => ServiceItemStats(
+              rows.first.values.first as int,
+              (rows.first.values.last ?? 0.0) as double,
+            ));
+  }
+
   /// Checks if the value is an integer or a double and returns a double.
   double _getDouble(dynamic value) {
     if (value is int) {
