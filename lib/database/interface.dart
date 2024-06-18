@@ -91,7 +91,7 @@ abstract class IDatabase {
   Future<int> countServiceItem(int serviceId, {bool? bought});
 
   /// Gets the total value of items used in a service.
-  Future<int> totalServiceItem(int serviceId, {bool? bought});
+  Future<double> totalServiceItem(int serviceId, {bool? bought});
 
   /// Gets the statistics of the items used in a service.
   Future<ServiceItemStats> statsServiceItem(int serviceId, {bool? bought});
