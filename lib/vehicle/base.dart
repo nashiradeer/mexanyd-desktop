@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/theme.dart';
 import 'package:mexanyd_desktop/widgets/buttons.dart';
+import 'package:mexanyd_desktop/widgets/list_item.dart';
 import 'package:mexanyd_desktop/widgets/paginator.dart';
 
 /// A base class for vehicle selection.
@@ -161,6 +162,9 @@ class _VehicleState extends State<VehicleBase> {
             onClick: widget.onSelect != null
                 ? (selection) => widget.onSelect!(context, selection)
                 : _delete,
+            buttonColor: widget.onSelect != null
+                ? Theme.of(context).colorScheme.primary
+                : Colors.red,
           ),
           fetcher: (params) async {
             final vehicles = await globalDatabase.listVehicle(
@@ -257,50 +261,25 @@ class _VehicleItem extends StatelessWidget {
   /// The function to call when the button is clicked.
   final void Function(Vehicle) onClick;
 
+  final Color? buttonColor;
+
   /// Creates a new vehicle item.
   const _VehicleItem({
     required this.vehicle,
     this.buttonIcon,
+    this.buttonColor,
     required this.onClick,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(right: 10, bottom: 5, top: 5),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: ListTile(
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              "${vehicle.brand} ${vehicle.model}",
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(width: 5),
-            Text(
-              vehicle.variant,
-              style: const TextStyle(fontSize: 18),
-            ),
-          ],
-        ),
-        leading: Icon(
-          Icons.directions_car_rounded,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        trailing: buttonIcon == null
-            ? null
-            : IconButton(
-                icon: buttonIcon!,
-                onPressed: () => onClick(vehicle),
-              ),
-      ),
+    return MexanydListItem(
+      highlight: "${vehicle.brand} ${vehicle.model}",
+      description: vehicle.variant,
+      icon: Icons.directions_car_rounded,
+      buttonIcon: buttonIcon,
+      onClick: () => onClick(vehicle),
+      buttonColor: buttonColor,
     );
   }
 }

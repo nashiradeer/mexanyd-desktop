@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:mexanyd_desktop/database/interface.dart';
 import 'package:mexanyd_desktop/main.dart';
+import 'package:mexanyd_desktop/widgets/list_item.dart';
 import 'package:mexanyd_desktop/widgets/paginator.dart';
 
 /// Controller for the [InOut] list.
@@ -106,8 +107,25 @@ class _InOutListState extends State<InOutList> {
     final day = widget.controller.day;
 
     return Paginator<InOut, double>(
-      itemBuilder: (context, item) =>
-          _InOutItem(item, widget.controller, widget.deleteButton),
+      itemBuilder: (context, item) => MexanydListItem(
+        icon: _typeToIcon(item.type),
+        top: DateFormat.yMd(appController.locale?.toLanguageTag())
+            .add_Hms()
+            .format(item.creation),
+        highlight: "R\$ ${item.value.toStringAsFixed(2)}",
+        highlightColor: (item.value < 0) ? Colors.red : Colors.green,
+        description: item.description,
+        boldDescription: true,
+        buttonIcon: widget.deleteButton ? const Icon(Icons.delete) : null,
+        buttonColor: Colors.red,
+        onClick: widget.deleteButton
+            ? () {
+                globalDatabase.deleteInOut(item.id).then((value) {
+                  _updateWidget();
+                });
+              }
+            : null,
+      ),
       headerBuilder: (context, header) => Text(
         AppLocalizations.of(context)!
             .totalMoney((header ?? 0).toStringAsFixed(2)),
@@ -125,83 +143,6 @@ class _InOutListState extends State<InOutList> {
           header: stats.total,
         );
       },
-    );
-  }
-}
-
-/// Item of the [InOutList].
-class _InOutItem extends StatelessWidget {
-  /// The [InOut] to show.
-  final InOut inOut;
-
-  /// If true, a delete button is shown.
-  final bool deleteButton;
-
-  /// Controller for the list.
-  final InOutController controller;
-
-  /// Creates a new [_InOutItem].
-  const _InOutItem(this.inOut, this.controller, [this.deleteButton = false]);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(right: 20, bottom: 5, top: 5),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: ListTile(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              DateFormat.yMd(appController.locale?.toLanguageTag())
-                  .add_Hms()
-                  .format(inOut.creation),
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w400),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  AppLocalizations.of(context)!
-                      .totalMoney(inOut.value.toStringAsFixed(2)),
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: (inOut.value < 0) ? Colors.red : Colors.green),
-                ),
-                if (inOut.description.isNotEmpty) ...[
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      inOut.description,
-                      style: const TextStyle(fontSize: 20),
-                      softWrap: true,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ],
-        ),
-        leading: Icon(
-          _typeToIcon(inOut.type),
-          color: Theme.of(context).colorScheme.primary,
-        ),
-        trailing: deleteButton
-            ? IconButton(
-                onPressed: () {
-                  globalDatabase.deleteInOut(inOut.id).then((value) {
-                    controller.reload();
-                  });
-                },
-                icon: const Icon(Icons.delete),
-              )
-            : null,
-      ),
     );
   }
 
