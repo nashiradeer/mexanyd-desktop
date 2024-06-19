@@ -267,7 +267,7 @@ class _VehicleItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 20, bottom: 5, top: 5),
+      margin: const EdgeInsets.only(right: 10, bottom: 5, top: 5),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(10),
