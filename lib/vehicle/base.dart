@@ -155,25 +155,33 @@ class _VehicleState extends State<VehicleBase> {
         ),
         const SizedBox(height: 5),
         Paginator(
-          itemBuilder: (context, vehicle) => _VehicleItem(
-            vehicle: vehicle,
-            buttonIcon: widget.onSelect != null
-                ? const Icon(
-                    Icons.play_arrow_rounded,
-                  )
-                : const Icon(Icons.delete_rounded),
+          itemBuilder: (context, vehicleData) => _VehicleItem(
+            vehicle: vehicleData.vehicle,
+            buttonIcon: _generateItemIcon(vehicleData.canDelete),
             onClick: widget.onSelect != null
                 ? (selection) => widget.onSelect!(context, selection)
                 : _delete,
           ),
-          fetcher: (params) {
-            return globalDatabase.listVehicle(
+          fetcher: (params) async {
+            final vehicles = await globalDatabase.listVehicle(
               limit: params.pageSize,
               offset: params.offset,
               brand: _brandController.text,
               model: _modelController.text,
               variant: _variantController.text,
             );
+
+            var vehiclesData = [];
+            for (var vehicle in vehicles) {
+              vehiclesData.add(_VehicleData(
+                vehicle,
+                widget.onSelect != null
+                    ? false
+                    : await globalDatabase.hasServiceWithVehicle(vehicle.id),
+              ));
+            }
+
+            return vehiclesData;
           },
           prefetch: (context) {
             return globalDatabase
@@ -223,6 +231,19 @@ class _VehicleState extends State<VehicleBase> {
   void _delete(Vehicle vehicle) {
     globalDatabase.deleteVehicle(vehicle.id).then((_) => _reload());
   }
+
+  /// Generates the icon for a vehicle item.
+  Icon? _generateItemIcon(bool canDelete) {
+    if (widget.onSelect != null) {
+      return const Icon(Icons.play_arrow_rounded);
+    }
+
+    if (canDelete) {
+      return const Icon(Icons.delete_rounded);
+    }
+
+    return null;
+  }
 }
 
 /// A widget that displays a single vehicle.
@@ -231,7 +252,7 @@ class _VehicleItem extends StatelessWidget {
   final Vehicle vehicle;
 
   /// The icon to display on the button.
-  final Icon buttonIcon;
+  final Icon? buttonIcon;
 
   /// The function to call when the button is clicked.
   final void Function(Vehicle) onClick;
@@ -239,7 +260,7 @@ class _VehicleItem extends StatelessWidget {
   /// Creates a new vehicle item.
   const _VehicleItem({
     required this.vehicle,
-    required this.buttonIcon,
+    this.buttonIcon,
     required this.onClick,
   });
 
@@ -273,11 +294,25 @@ class _VehicleItem extends StatelessWidget {
           Icons.directions_car_rounded,
           color: Theme.of(context).colorScheme.primary,
         ),
-        trailing: IconButton(
-          icon: buttonIcon,
-          onPressed: () => onClick(vehicle),
-        ),
+        trailing: buttonIcon == null
+            ? null
+            : IconButton(
+                icon: buttonIcon!,
+                onPressed: () => onClick(vehicle),
+              ),
       ),
     );
   }
+}
+
+/// The data for a vehicle item.
+class _VehicleData {
+  /// The vehicle to display.
+  final Vehicle vehicle;
+
+  /// Whether the vehicle can be deleted.
+  final bool canDelete;
+
+  /// Creates a new vehicle data.
+  const _VehicleData(this.vehicle, this.canDelete);
 }
