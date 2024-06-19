@@ -33,5 +33,8 @@
   "model": "Modelo",
   "variant": "Versão",
   "requiredField": "Campo obrigatório",
-  "services": "Serviços"
+  "services": "Serviços",
+  "selectVehicle": "Veículo",
+  "plate": "Placa",
+  "owner": "Dono"
 }

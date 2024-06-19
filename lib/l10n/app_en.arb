@@ -50,5 +50,8 @@
   "model": "Model",
   "variant": "Variant",
   "requiredField": "Required field",
-  "services": "Services"
+  "services": "Services",
+  "selectVehicle": "Vehicle",
+  "plate": "Plate",
+  "owner": "Owner"
 }
