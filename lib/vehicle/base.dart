@@ -177,7 +177,7 @@ class _VehicleState extends State<VehicleBase> {
                 vehicle,
                 widget.onSelect != null
                     ? false
-                    : await globalDatabase.hasServiceWithVehicle(vehicle.id),
+                    : !await globalDatabase.hasServiceWithVehicle(vehicle.id),
               ));
             }
 
