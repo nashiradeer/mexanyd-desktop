@@ -49,6 +49,7 @@ class LocalDatabase extends IDatabase {
         owner TEXT NOT NULL DEFAULT '',
         service TEXT NOT NULL DEFAULT '',
         value REAL NOT NULL DEFAULT 0,
+        commission REAL NOT NULL DEFAULT 0,
         creation TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (vehicle_id) REFERENCES vehicle (id) ON DELETE RESTRICT ON UPDATE CASCADE
       )
@@ -306,8 +307,16 @@ class LocalDatabase extends IDatabase {
   }
 
   @override
-  Future<CarService> createCarService(int vehicleId, String plate, String color,
-      int odometer, String owner, String service, double value) {
+  Future<CarService> createCarService({
+    required int vehicleId,
+    required String plate,
+    required String color,
+    required int odometer,
+    required String owner,
+    required String service,
+    required double value,
+    required double commission,
+  }) {
     return _database.transaction((txn) async {
       final id = await txn.insert("car_service", {
         "vehicle_id": vehicleId,
@@ -317,6 +326,7 @@ class LocalDatabase extends IDatabase {
         "owner": owner,
         "service": service,
         "value": value,
+        "commission": commission,
       });
 
       final creation = await txn.query(
@@ -327,14 +337,15 @@ class LocalDatabase extends IDatabase {
       );
 
       return CarService(
-        id,
-        vehicleId,
-        plate,
-        color,
-        odometer,
-        owner,
-        service,
-        value,
+        id: id,
+        vehicleId: vehicleId,
+        plate: plate,
+        color: color,
+        odometer: odometer,
+        owner: owner,
+        service: service,
+        value: value,
+        commission: commission,
         creation: DateTime.parse(creation.first['creation'] as String),
       );
     });
@@ -382,14 +393,15 @@ class LocalDatabase extends IDatabase {
         )
         .then((rows) => rows
             .map((item) => CarService(
-                  item['id'] as int,
-                  item['vehicle_id'] as int,
-                  item['plate'] as String,
-                  item['color'] as String,
-                  item['odometer'] as int,
-                  item['owner'] as String,
-                  item['service'] as String,
-                  item['value'] as double,
+                  id: item['id'] as int,
+                  vehicleId: item['vehicle_id'] as int,
+                  plate: item['plate'] as String,
+                  color: item['color'] as String,
+                  odometer: item['odometer'] as int,
+                  owner: item['owner'] as String,
+                  service: item['service'] as String,
+                  value: item['value'] as double,
+                  commission: item['commission'] as double,
                   creation: DateTime.parse(item['creation'] as String),
                 ))
             .toList());
@@ -435,7 +447,7 @@ class LocalDatabase extends IDatabase {
       for (final item in items) {
         await txn.insert("service_item", {
           "service_id": serviceId,
-          "bought": item.bought,
+          "bought": item.bought ? 1 : 0,
           "name": item.name,
           "price": item.price,
         });
