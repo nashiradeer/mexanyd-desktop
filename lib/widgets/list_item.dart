@@ -32,7 +32,7 @@ class MexanydListItem extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(10),
       ),
-      height: 60,
+      height: 55,
       child: Row(
         children: [
           if (icon != null)
@@ -88,7 +88,7 @@ class MexanydListItem extends StatelessWidget {
           ),
           if (buttonIcon != null)
             SizedBox(
-              height: 60,
+              height: 55,
               child: IconButton(
                 icon: buttonIcon!,
                 onPressed: onClick,
