@@ -51,8 +51,16 @@ abstract class IDatabase {
   Future<int> countVehicle();
 
   /// Inserts a new car service with the given [vehicleId], [plate], [color], [odometer], [owner], [service] and [value], returning the created [CarService].
-  Future<CarService> createCarService(int vehicleId, String plate, String color,
-      int odometer, String owner, String service, double value);
+  Future<CarService> createCarService({
+    required int vehicleId,
+    required String plate,
+    required String color,
+    required int odometer,
+    required String owner,
+    required String service,
+    required double value,
+    required double commission,
+  });
 
   /// Checks if a vehicle has a service.
   Future<bool> hasServiceWithVehicle(int vehicleId);
@@ -236,14 +244,25 @@ class CarService {
   /// The value earned in the service.
   final double value;
 
+  /// The commission earned in the service.
+  final double commission;
+
   /// The creation date of this database entry.
   final DateTime creation;
 
   /// Creates a new car service.
-  CarService(this.id, this.vehicleId, this.plate, this.color, this.odometer,
-      this.owner, this.service, this.value,
-      {DateTime? creation})
-      : creation = creation ?? DateTime.now();
+  CarService({
+    required this.id,
+    required this.vehicleId,
+    required this.plate,
+    required this.color,
+    required this.odometer,
+    required this.owner,
+    required this.service,
+    required this.value,
+    required this.commission,
+    DateTime? creation,
+  }) : creation = creation ?? DateTime.now();
 }
 
 /// Represents a item used in a car service.
