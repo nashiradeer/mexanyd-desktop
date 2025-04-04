@@ -1,6 +1,6 @@
 # Nashira Deer // Mexanyd Desktop
 
-**Warning: Mexanyd Desktop hasn't been maintained since 2023. If you'd like to maintain it, consider forking it.**
+**Warning: Mexanyd Desktop hasn't been maintained since 2024. If you'd like to maintain it, consider forking it.**
 
 A tool created to help with tasks from an auto parts store.
 
